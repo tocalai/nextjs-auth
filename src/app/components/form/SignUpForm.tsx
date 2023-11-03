@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import GoogleSignInButton from '../ui/GoogleSignInButton'
+import { useRouter } from 'next/navigation'
 
 
 const FormSchema = z.object({
@@ -15,17 +16,15 @@ const FormSchema = z.object({
     password: z.string().min(1, 'Password is required.'),
     confirmPassword: z.string().min(1, 'Password confirmation is required.')
 })
-.refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Password not match"
-})
+    .refine((data) => data.password === data.confirmPassword, {
+        path: ["confirmPassword"],
+        message: "Password not match"
+    })
 
 
-const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    console.log(values)
-}
 
 export default function SignUpForm() {
+    const router = useRouter()
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -35,6 +34,27 @@ export default function SignUpForm() {
             confirmPassword: ""
         },
     })
+
+    const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+        const res = await fetch('/api/user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: values.username,
+                email: values.email,
+                password: values.password
+            })
+        })
+
+        if (res.ok) {
+            router.push('/dashboard')
+        } else {
+            console.error('Sing up failure', res)
+        }
+
+    }
 
     return (
         <Form {...form}>
