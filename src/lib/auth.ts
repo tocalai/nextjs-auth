@@ -2,6 +2,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
+import { compare } from "bcrypt"
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -15,23 +16,29 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "jsmith" },
+                email: { label: "Username", type: "text", placeholder: "jsmith" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                const res = await fetch("/your/endpoint", {
-                    method: 'POST',
-                    body: JSON.stringify(credentials),
-                    headers: { "Content-Type": "application/json" }
+                if (!credentials?.email || !credentials?.password) return null
+                
+                const user = await db.user.findUnique({
+                    where: {email: credentials.email}
                 })
-                const user = await res.json()
-
-                // If no error and we have user data, return it
-                if (res.ok && user) {
-                    return user
+                if (!user) return null
+ 
+                const isPasswordMatch = await compare(credentials.password, user.password)
+              
+                if (isPasswordMatch) {
+                    return {
+                        id: `${user.id}`,
+                        username: user.username,
+                        email: user.email
+                    }
                 }
-                // Return null if user data could not be retrieved
+
                 return null
+            
             }
         })
     ]

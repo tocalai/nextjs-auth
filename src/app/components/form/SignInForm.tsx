@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import GoogleSignInButton from '../ui/GoogleSignInButton'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 
 const FormSchema = z.object({
@@ -17,11 +19,8 @@ const FormSchema = z.object({
 })
 
 
-const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    console.log(values)
-}
-
 export default function SignInForm() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -29,6 +28,18 @@ export default function SignInForm() {
       password: ""
     },
   })
+
+  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    const signInData = await signIn('credentials', {
+      email: values.email,
+      password: values.password
+    })
+
+    if(!signInData?.error) {
+      router.push('/admin')
+    }
+
+  }
 
   return (
     <Form {...form}>

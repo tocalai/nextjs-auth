@@ -51,7 +51,7 @@ export default function SignUpForm() {
         if (res.ok) {
             router.push('/sign-in')
         } else {
-            console.error('Sing up failure', res)
+            console.error('Sing up failed', res)
         }
 
     }
