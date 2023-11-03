@@ -3,20 +3,22 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from "next/link";
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import GoogleSignInButton from '../ui/GoogleSignInButton'
 
 
 const FormSchema = z.object({
-  email: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  password: z.string()
+  email: z.string().min(1, {
+    message: "Email is reqired.",
+  }).email('Ivalid email.'),
+  password: z.string().min(1, 'Password is required.')
 })
 
 
-const onSubmit = () => {
-
+const onSubmit = (values: z.infer<typeof FormSchema>) => {
+    console.log(values)
 }
 
 export default function SignInForm() {
@@ -24,6 +26,7 @@ export default function SignInForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
+      password: ""
     },
   })
 
@@ -36,7 +39,7 @@ export default function SignInForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>email</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input placeholder="Input your email" {...field} />
                 </FormControl>
@@ -49,9 +52,9 @@ export default function SignInForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>password</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Input your password" {...field} />
+                  <Input placeholder="Input your password" type='password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -61,11 +64,15 @@ export default function SignInForm() {
 
         <Button className='w-full mt-5' type="submit">Sign In</Button>
       </form>
-      <div className='mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before: block before: h-px before: flex-grow before: bg-stone-400 after:ml-4 after:block after: h-px after: flex-grow after:bg-stone-400'>
+      <div className='mx-auto my-4 flex w-full items-center justify-evenly 
+      before:mr-4 before: before: h-px before: flex-grow before: bg-stone-400 after:ml-4 
+      after:block after: after: after:bg-stone-400'>
         or
       </div>
+      <GoogleSignInButton>Sign In wiht Google</GoogleSignInButton>
       <p className='text-center text-sm text-gray-600 mt-2'>
-         If you don&apos;t have an account, please&nbsp;       
+        If you don&apos;t have an account, please&nbsp;
+        <Link className='text-green-500 hover:underline' href="/sign-up">Sign Up</Link>
       </p>
     </Form>
   )
