@@ -49,7 +49,7 @@ export default function SignUpForm() {
         })
 
         if (res.ok) {
-            router.push('/dashboard')
+            router.push('/sign-in')
         } else {
             console.error('Sing up failure', res)
         }
