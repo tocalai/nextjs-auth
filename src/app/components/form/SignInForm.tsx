@@ -9,6 +9,7 @@ import * as z from "zod"
 import GoogleSignInButton from '../ui/GoogleSignInButton'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/components/ui/use-toast'
 
 
 const FormSchema = z.object({
@@ -21,6 +22,7 @@ const FormSchema = z.object({
 
 export default function SignInForm() {
   const router = useRouter()
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -35,8 +37,17 @@ export default function SignInForm() {
       password: values.password
     })
 
-    if(!signInData?.error) {
+    if (!signInData?.error) {
+      router.refresh()
       router.push('/admin')
+    }
+    else {
+      console.error(signInData.error)
+      toast({
+        title: "Sign in failed",
+        description: "Something went wrong, you might contact the admin.",
+        variant: 'destructive'
+      })
     }
 
   }

@@ -6,11 +6,12 @@ import { compare } from "bcrypt"
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
+    secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: 'jwt'
     },
     pages: {
-      signIn: '/sign-in'       
+        signIn: '/sign-in'
     },
     providers: [
         CredentialsProvider({
@@ -21,14 +22,14 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials, req) {
                 if (!credentials?.email || !credentials?.password) return null
-                
+
                 const user = await db.user.findUnique({
-                    where: {email: credentials.email}
+                    where: { email: credentials.email }
                 })
                 if (!user) return null
- 
+
                 const isPasswordMatch = await compare(credentials.password, user.password)
-              
+
                 if (isPasswordMatch) {
                     return {
                         id: `${user.id}`,
@@ -38,8 +39,36 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 return null
-            
+
             }
         })
-    ]
+    ],
+    callbacks: {
+        // async signIn({ user, account, profile, email, credentials }) {
+        //     return true
+        // },
+        // async redirect({ url, baseUrl }) {
+        //     return baseUrl
+        // },
+
+        async jwt({ token, user }) {
+            if (user) {
+                return {
+                    ...token,
+                    username: user.username
+                }
+            }
+            return token
+        },
+        async session({ session, token }) {
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    username: token.username
+                }
+            }
+
+        }
+    }
 }

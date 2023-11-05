@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import GoogleSignInButton from '../ui/GoogleSignInButton'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/components/ui/use-toast'
 
 
 const FormSchema = z.object({
@@ -25,6 +26,7 @@ const FormSchema = z.object({
 
 export default function SignUpForm() {
     const router = useRouter()
+    const { toast } = useToast()
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -52,6 +54,11 @@ export default function SignUpForm() {
             router.push('/sign-in')
         } else {
             console.error('Sing up failed', res)
+            toast({
+                title: "Sign up failed",
+                description: "Something went wrong, you might contact the admin.",
+                variant: 'destructive'
+              })
         }
 
     }
