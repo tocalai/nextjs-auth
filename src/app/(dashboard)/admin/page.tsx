@@ -9,6 +9,11 @@ const page = async () => {
       <div>Welcome to Dashboard {session?.user.username}</div>
     )
    }
+   else {
+    return (
+      <h2 className="text-5xl">No user login.</h2>
+    )
+   }
 
 }
 

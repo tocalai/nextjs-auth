@@ -17,18 +17,20 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                email: { label: "Username", type: "text", placeholder: "jsmith" },
+                email: { label: "Email", type: "email", placeholder: "jsmith@abc.com" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
+                console.log(credentials)
                 if (!credentials?.email || !credentials?.password) return null
 
                 const user = await db.user.findUnique({
                     where: { email: credentials.email }
-                })
+                 })
+
                 if (!user) return null
 
-                const isPasswordMatch = await compare(credentials.password, user.password)
+                const isPasswordMatch = false//await compare(credentials.password, user.password) // maybe bug
 
                 if (isPasswordMatch) {
                     return {
@@ -45,6 +47,9 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         // async signIn({ user, account, profile, email, credentials }) {
+        //     if (!user) return false
+            
+        //     console.log(credentials)
         //     return true
         // },
         // async redirect({ url, baseUrl }) {

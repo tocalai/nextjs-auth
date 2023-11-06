@@ -10,6 +10,7 @@ import GoogleSignInButton from '../ui/GoogleSignInButton'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
+import { ok } from 'assert'
 
 
 const FormSchema = z.object({
@@ -34,15 +35,17 @@ export default function SignInForm() {
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     const signInData = await signIn('credentials', {
       email: values.email,
-      password: values.password
+      password: values.password,
+      callbackUrl: '/admin'
     })
 
-    if (!signInData?.error) {
-      router.refresh()
-      router.push('/admin')
-    }
-    else {
-      console.error(signInData.error)
+    console.log('res signIn:', signInData)
+    // if (!signInData?.ok) {
+    //   //router.refresh()
+    //   // router.push('/admin')
+    // }
+    if (!signInData?.ok) {
+      console.error(signInData)
       toast({
         title: "Sign in failed",
         description: "Something went wrong, you might contact the admin.",
