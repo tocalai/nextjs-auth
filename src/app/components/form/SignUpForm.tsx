@@ -58,7 +58,7 @@ export default function SignUpForm() {
                 title: "Sign up failed",
                 description: "Something went wrong, you might contact the admin.",
                 variant: 'destructive'
-              })
+            })
         }
 
     }
@@ -123,9 +123,7 @@ export default function SignUpForm() {
 
                 <Button className='w-full mt-5' type="submit">Sign Up</Button>
             </form>
-            <div className='mx-auto my-4 flex w-full items-center justify-evenly 
-      before:mr-4 before: before: h-px before: flex-grow before: bg-stone-400 after:ml-4 
-      after:block after: after: after:bg-stone-400'>
+            <div className='mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400'>
                 or
             </div>
             <GoogleSignInButton>Sign Up wiht Google</GoogleSignInButton>

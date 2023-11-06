@@ -36,21 +36,21 @@ export default function SignInForm() {
     const signInData = await signIn('credentials', {
       email: values.email,
       password: values.password,
-      callbackUrl: '/admin'
+      redirect: false
     })
 
-    console.log('res signIn:', signInData)
-    // if (!signInData?.ok) {
-    //   //router.refresh()
-    //   // router.push('/admin')
-    // }
+
     if (!signInData?.ok) {
-      console.error(signInData)
-      toast({
+      console.error(signInData?.error)  
+      toast({      
         title: "Sign in failed",
         description: "Something went wrong, you might contact the admin.",
         variant: 'destructive'
       })
+    }
+    else {
+      router.refresh()
+      router.push('/admin')
     }
 
   }
@@ -89,9 +89,7 @@ export default function SignInForm() {
 
         <Button className='w-full mt-5' type="submit">Sign In</Button>
       </form>
-      <div className='mx-auto my-4 flex w-full items-center justify-evenly 
-      before:mr-4 before: before: h-px before: flex-grow before: bg-stone-400 after:ml-4 
-      after:block after: after: after:bg-stone-400'>
+      <div className='mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400'>
         or
       </div>
       <GoogleSignInButton>Sign In wiht Google</GoogleSignInButton>
