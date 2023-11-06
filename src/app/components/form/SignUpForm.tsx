@@ -98,7 +98,7 @@ export default function SignUpForm() {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>password</FormLabel>
+                                <FormLabel>Password</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Input your password" type='password' {...field} />
                                 </FormControl>
