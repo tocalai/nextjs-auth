@@ -11,6 +11,8 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
 import { delay } from '@/lib/utils'
+import { useState } from 'react'
+import SpinnerButton from '../ui/SpinnerButton '
 
 const FormSchema = z.object({
   email: z.string().min(1, {
@@ -30,8 +32,11 @@ export default function SignInForm() {
       password: ""
     },
   })
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>) => {    
+  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    setIsSubmitting(true)
+    
     await delay(3000)
 
     const signInData = await signIn('credentials', {
@@ -39,10 +44,10 @@ export default function SignInForm() {
       password: values.password,
       redirect: false
     })
-    
+
     if (!signInData?.ok) {
-      console.error(signInData?.error)  
-      toast({      
+      console.error(signInData?.error)
+      toast({
         title: "Sign in failed",
         description: "Something went wrong, you might contact the admin.",
         variant: 'destructive'
@@ -52,7 +57,7 @@ export default function SignInForm() {
       router.refresh()
       router.push('/admin')
     }
-
+    setIsSubmitting(false)
   }
 
   return (
@@ -87,7 +92,7 @@ export default function SignInForm() {
           />
         </div>
 
-        <Button className='w-full mt-5' type="submit">Sign In</Button>
+        <SpinnerButton name='Sign In' state={isSubmitting} disabled={isSubmitting} className='w-full mt-5' type="submit" />
       </form>
       <div className='mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400'>
         or

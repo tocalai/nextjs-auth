@@ -9,6 +9,8 @@ import * as z from "zod"
 import GoogleSignInButton from '../ui/GoogleSignInButton'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
+import SpinnerButton from '../ui/SpinnerButton '
+import { useState } from 'react'
 
 
 const FormSchema = z.object({
@@ -36,8 +38,10 @@ export default function SignUpForm() {
             confirmPassword: ""
         },
     })
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+        setIsSubmitting(true)
         const res = await fetch('/api/user', {
             method: 'POST',
             headers: {
@@ -60,6 +64,7 @@ export default function SignUpForm() {
                 variant: 'destructive'
             })
         }
+        setIsSubmitting(false)
 
     }
 
@@ -121,7 +126,7 @@ export default function SignUpForm() {
                     />
                 </div>
 
-                <Button className='w-full mt-5' type="submit">Sign Up</Button>
+                <SpinnerButton name='Sign Up' state={isSubmitting} disabled={isSubmitting} className='w-full mt-5' type="submit" />
             </form>
             <div className='mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400'>
                 or
