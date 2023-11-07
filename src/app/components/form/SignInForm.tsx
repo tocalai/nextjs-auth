@@ -10,8 +10,7 @@ import GoogleSignInButton from '../ui/GoogleSignInButton'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
-import { ok } from 'assert'
-
+import { delay } from '@/lib/utils'
 
 const FormSchema = z.object({
   email: z.string().min(1, {
@@ -32,14 +31,15 @@ export default function SignInForm() {
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof FormSchema>) => {    
+    await delay(3000)
+
     const signInData = await signIn('credentials', {
       email: values.email,
       password: values.password,
       redirect: false
     })
-
-
+    
     if (!signInData?.ok) {
       console.error(signInData?.error)  
       toast({      

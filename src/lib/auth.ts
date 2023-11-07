@@ -2,8 +2,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
-// import { compare } from "bcrypt"
 import * as bcrypt from 'bcrypt';
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -27,12 +27,12 @@ export const authOptions: NextAuthOptions = {
 
                 const user = await db.user.findUnique({
                     where: { email: credentials.email }
-                 })
+                })
 
                 if (!user) return null
 
                 const isPasswordMatch = await bcrypt.compare(credentials.password, user.password)
-
+                
                 if (isPasswordMatch) {
                     return {
                         id: `${user.id}`,
@@ -44,12 +44,16 @@ export const authOptions: NextAuthOptions = {
                 return null
 
             }
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
         })
     ],
     callbacks: {
         // async signIn({ user, account, profile, email, credentials }) {
         //     if (!user) return false
-            
+
         //     console.log(credentials)
         //     return true
         // },

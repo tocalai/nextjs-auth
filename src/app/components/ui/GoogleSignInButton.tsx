@@ -1,4 +1,6 @@
+'use client'
 import { Button } from "@/components/ui/button"
+import { signIn } from "next-auth/react"
 
 
 const GoogleSignInButton = ({
@@ -6,8 +8,9 @@ const GoogleSignInButton = ({
 }: {
     children: React.ReactNode
 }) => {
-    const loginWithGoogle = () => {
-        console.log('SSO with google')
+    const loginWithGoogle =  async () => {
+        const signInData = await signIn('google')
+        console.log(signInData)
     }
 
     return (

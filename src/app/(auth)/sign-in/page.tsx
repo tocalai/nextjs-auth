@@ -1,10 +1,14 @@
 import SignInForm from '@/app/components/form/SignInForm'
+import Loading from '@/app/components/loading'
+import { Suspense } from 'react'
 
 const page = () => {
   return (
-    <div className='w-full'>
+    <Suspense fallback={<Loading />}>
+      <div className='w-full'>
         <SignInForm />
-    </div>
+      </div>
+    </Suspense>
   )
 }
 
