@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                console.log(credentials)
+                console.log('authroized', credentials)
                 if (!credentials?.email || !credentials?.password) return null
 
                 const user = await db.user.findUnique({

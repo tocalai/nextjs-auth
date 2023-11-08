@@ -1,5 +1,4 @@
 import { Loader2 } from "lucide-react"
-
 import { Button, ButtonProps } from "@/components/ui/button"
 
 interface SpinnerButtonProps extends ButtonProps {
@@ -16,7 +15,7 @@ const SpinnerButton = ({
         <Button {...props}>
             {state ? (
                 <>
-                    <Loader2 className="mr2 h-5 w-5 animate-spin" />
+                    <Loader2 className="mr6 h-5 w-5 animate-spin" />
                     Please wait...
                 </>
             ) : (

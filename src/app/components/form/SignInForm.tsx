@@ -1,5 +1,5 @@
 'use client'
-import { Button } from '@/components/ui/button'
+
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,7 +10,6 @@ import GoogleSignInButton from '../ui/GoogleSignInButton'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
-import { delay } from '@/lib/utils'
 import { useState } from 'react'
 import SpinnerButton from '../ui/SpinnerButton '
 
@@ -35,10 +34,7 @@ export default function SignInForm() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    setIsSubmitting(true)
-    
-    await delay(3000)
-
+    setIsSubmitting(true) 
     const signInData = await signIn('credentials', {
       email: values.email,
       password: values.password,
