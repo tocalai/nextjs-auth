@@ -2,8 +2,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
-import * as bcrypt from 'bcrypt';
-import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
+import * as bcrypt from 'bcrypt'
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google"
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -71,11 +71,12 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        // async signIn({ user, account, profile, email, credentials }) {
-        //     if (!user) return false
-        //     console.log(credentials)
-        //     return true
-        // },
+        async signIn({ user, account, profile, email, credentials }) {
+            console.log(account)
+            //if (!user) return false
+            
+            return true
+        },
         // async redirect({ url, baseUrl }) {
         //     return baseUrl
         // },

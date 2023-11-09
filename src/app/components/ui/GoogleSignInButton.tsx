@@ -13,7 +13,7 @@ const GoogleSignInButton = ({
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const loginWithGoogle =  async () => {
         setIsSubmitting(true)
-        const signInData = await signIn('google')
+        const signInData = await signIn('google', {callbackUrl: "/admin"})
         console.log(signInData)
         setIsSubmitting(false)
     }

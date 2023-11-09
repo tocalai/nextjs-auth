@@ -6,7 +6,7 @@ const page = async () => {
 
    if (session?.user) {
     return (
-      <div>Welcome to Dashboard {session?.user.username}</div>
+      <div className="text-lime-500 text-5xl">Welcome To Dashboard Page, {session?.user.username}</div>
     )
    }
    else {
