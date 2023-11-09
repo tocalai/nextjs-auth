@@ -3,7 +3,7 @@ import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
 import * as bcrypt from 'bcrypt';
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -47,27 +47,47 @@ export const authOptions: NextAuthOptions = {
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
+                }
+            },
+
+            
+            async profile (profile: GoogleProfile) {
+                
+                const hashPassword = await bcrypt.hash('password', 10)
+                return {
+                  id: profile.sub,
+                  email: profile.email,
+                  image: profile.avatar_url,
+                  username: profile.name,
+                  password: hashPassword
+                }
+            }
         })
     ],
     callbacks: {
         // async signIn({ user, account, profile, email, credentials }) {
         //     if (!user) return false
-
         //     console.log(credentials)
         //     return true
         // },
         // async redirect({ url, baseUrl }) {
         //     return baseUrl
         // },
-
-        async jwt({ token, user }) {
+        async jwt({ token, user, profile }) {
+            
             if (user) {
                 return {
                     ...token,
                     username: user.username
                 }
             }
+
             return token
         },
         async session({ session, token }) {
@@ -78,7 +98,8 @@ export const authOptions: NextAuthOptions = {
                     username: token.username
                 }
             }
-
+            
+            
         }
     }
 }
