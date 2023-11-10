@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                console.log('authroized', credentials)
+                //console.log('authroized', credentials)
                 if (!credentials?.email || !credentials?.password) return null
 
                 const user = await db.user.findUnique({
@@ -30,9 +30,10 @@ export const authOptions: NextAuthOptions = {
                 })
 
                 if (!user) return null
+                console.log('User', user)
 
                 const isPasswordMatch = await bcrypt.compare(credentials.password, user.password)
-                
+                console.log('isPasswordMatch', isPasswordMatch)
                 if (isPasswordMatch) {
                     return {
                         id: `${user.id}`,

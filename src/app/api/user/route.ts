@@ -23,7 +23,7 @@ export async function POST(req: Request) {
             return NextResponse.json({user: null, message: 'Email with the user already existed.', status: 409})
         }
 
-        // store user info into db         
+        // store user info into db       
         const hashedPassword = await hash(password, 10)
         const newUser = await db.user.create({
             data: {

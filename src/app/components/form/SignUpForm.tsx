@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
 import SpinnerButton from '../ui/SpinnerButton '
 import { useState } from 'react'
+import { validatePassword } from '@/lib/utils'
 
 
 const FormSchema = z.object({
@@ -21,7 +22,12 @@ const FormSchema = z.object({
 })
     .refine((data) => data.password === data.confirmPassword, {
         path: ["confirmPassword"],
-        message: "Password not match"
+        message: "Password not match."
+    })
+    .refine((data) => validatePassword(data.password),
+    {
+        path: ["password"],
+        message: "Password not meet the criteria."
     })
 
 
