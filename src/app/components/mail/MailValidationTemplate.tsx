@@ -13,28 +13,31 @@ import {
 import { Tailwind } from '@react-email/tailwind';
 
 interface MailTemplateProps {
-    username: string;
+    username: string
+    token: string
 }
 
-const MailTemplate = ({
-    username
+const MailValidationTemplate = ({
+    username,
+    token
 }: MailTemplateProps) => {
+    const verifyUri = `${process.env.NEXTAUTH_URL}/verify-mail?token=${token}`
     return (
         <Html>
             <Head />
-            <Preview>Hello, {username}, Please verfiy your account.</Preview>
+            <Preview>Hello, {username}, Please verfiy your email.</Preview>
             <Tailwind>
                 <Body>
                     <Container>
                         <Section>
                             <Hr />
                             <Text>
-                                Welcome to onboard. Please verfiy and active your account.
+                                Welcome to onboard. Click below button to verfiy and active your account.
                             </Text>
                             <Button
-                                href="https://dashboard.stripe.com/login"
+                                href={verifyUri}
                             >
-                                Verify Your Account
+                                Verify Your Email
                             </Button>
                             <Hr />
                             <Text>
@@ -47,4 +50,4 @@ const MailTemplate = ({
     )
 }
 
-export default MailTemplate
+export default MailValidationTemplate

@@ -1,6 +1,6 @@
 import SignUpForm from "@/app/components/form/SignUpForm"
 
-const page = () => {
+const Page = () => {
   return (
     <div className="w-full">
       <SignUpForm />
@@ -8,4 +8,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

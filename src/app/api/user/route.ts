@@ -31,13 +31,15 @@ export async function POST(req: Request) {
                 email,
                 password: hashedPassword
             }
-        })    
+        })
+        
+        if(!newUser) return NextResponse.json({ message: "User create failed.", status: 500 })
 
         const {password: newUserPassword, ...userWithoutPassword} = newUser
         return NextResponse.json({user: userWithoutPassword, message: 'User created successfully.', status: 201})
 
     } catch (error: any) {
         console.log(error)
-        return NextResponse.json({ message: "something went wrong", status: 500 })
+        return NextResponse.json({ message: "Something went wrong", status: 500 })
     }
 }

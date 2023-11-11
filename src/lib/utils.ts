@@ -9,6 +9,7 @@ export function delay(ms: number) {
   return new Promise((reslove) => setTimeout(reslove, ms))
 }
 
+// TODO, send back alert message
 export function validatePassword(password: string): boolean {
   // regular expressions
   const lowerRegex = /[a-z]/;

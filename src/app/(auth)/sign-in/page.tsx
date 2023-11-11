@@ -1,6 +1,6 @@
 import SignInForm from '@/app/components/form/SignInForm'
 
-const page = () => {
+const Page = () => {
   return (
     <div className='w-full'>
       <SignInForm />
@@ -9,4 +9,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
