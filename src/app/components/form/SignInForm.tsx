@@ -34,24 +34,26 @@ export default function SignInForm() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    setIsSubmitting(true) 
-    const signInData = await signIn('credentials', {
-      email: values.email,
-      password: values.password,
-      redirect: false
-    })
+    setIsSubmitting(true)
+    try {
+      const signInData = await signIn('credentials', {
+        email: values.email,
+        password: values.password,
+        redirect: false
+      })
 
-    if (!signInData?.ok) {
-      console.error(signInData?.error)
+      if (!signInData?.ok) throw new Error('Sign in failed.')
+    
+      router.refresh()
+      router.push('/admin')
+
+    } catch (error: any) {
+      console.error(error)
       toast({
         title: "Sign in failed",
         description: "Something went wrong, you might contact the admin.",
         variant: 'destructive'
       })
-    }
-    else {
-      router.refresh()
-      router.push('/admin')
     }
     setIsSubmitting(false)
   }

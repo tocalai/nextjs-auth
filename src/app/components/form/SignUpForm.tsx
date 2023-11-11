@@ -25,10 +25,10 @@ const FormSchema = z.object({
         message: "Password not match."
     })
     .refine((data) => validatePassword(data.password),
-    {
-        path: ["password"],
-        message: "Password not meet the criteria."
-    })
+        {
+            path: ["password"],
+            message: "Password not meet the criteria."
+        })
 
 
 
@@ -48,28 +48,48 @@ export default function SignUpForm() {
 
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
         setIsSubmitting(true)
-        const res = await fetch('/api/user', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: values.username,
-                email: values.email,
-                password: values.password
+        try {
+            const userRes = await fetch('/api/user/sign-up', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: values.username,
+                    email: values.email,
+                    password: values.password
+                })
             })
-        })
+            if (!userRes.ok) throw new Error('Invoke /api/user/sign-up failed.')
 
-        if (res.ok) {
+            const { user } = await userRes.json()
+            const mailRes = await fetch('/api/mail/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: values.username,
+                    sendTo: values.email,
+                    userId: user.id,
+                    type: emailType.emailValidation
+                })
+            })
+
+            if (!mailRes.ok) throw new Error('Invoke /api/mail/send failed.')
+
             router.push('/sign-in')
-        } else {
-            console.error('Sing up failed', res)
+
+        }
+        catch (error: any) {
+            console.error('Sing up failed', error)
             toast({
                 title: "Sign up failed",
                 description: "Something went wrong, you might contact the admin.",
                 variant: 'destructive'
             })
         }
+
         setIsSubmitting(false)
 
     }

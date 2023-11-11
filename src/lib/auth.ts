@@ -30,15 +30,16 @@ export const authOptions: NextAuthOptions = {
                 })
 
                 if (!user) return null
-                console.log('User', user)
 
                 const isPasswordMatch = await bcrypt.compare(credentials.password, user.password)
-                console.log('isPasswordMatch', isPasswordMatch)
-                if (isPasswordMatch) {
+
+                console.log('EmailVerified: ', user.emailVerified)
+                if (isPasswordMatch && !user.emailVerified) {
                     return {
                         id: `${user.id}`,
                         username: user.username,
-                        email: user.email
+                        email: user.email,
+                        emailVerified: user.emailVerified
                     }
                 }
 

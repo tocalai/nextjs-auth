@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import * as bcrypt from 'bcrypt'
 import { db } from "@/lib/db"
+import ResetPasswordTemplate from '@/app/components/mail/ResetPasswordTemplate';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -26,14 +27,14 @@ export async function POST(req: NextRequest) {
         if (!newVerificationToken) return NextResponse.json({ message: "VerificationToken create failed.", status: 500 })
 
         var subject = ''
-        const getMailTemple = (type: mailType): React.JSX.Element => {
+        const getMailTemple = (type: emailType): React.JSX.Element => {
             switch (type) {
-                case mailType.emailValidation:
+                case emailType.emailValidation:
                     subject = 'Verify Your Mail'
                     return (MailValidationTemplate({ username: username, token: token }))
-                case mailType.resetPassword:
+                case emailType.resetPassword:
                     subject = 'Reset Your Password'
-                    return (MailValidationTemplate({ username: username, token: token }))
+                    return (ResetPasswordTemplate({ username: username, token: token }))
                 default:
                     throw new Error('Mail template not found.')
             }
