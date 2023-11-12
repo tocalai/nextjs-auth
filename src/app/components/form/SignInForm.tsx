@@ -7,11 +7,15 @@ import Link from "next/link";
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import GoogleSignInButton from '../ui/GoogleSignInButton'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SpinnerButton from '../ui/SpinnerButton '
+import { ToastAction } from '@/components/ui/toast';
+import { EmailType } from '@/types/enums';
+
+
 
 const FormSchema = z.object({
   email: z.string().min(1, {
@@ -24,6 +28,7 @@ const FormSchema = z.object({
 export default function SignInForm() {
   const router = useRouter()
   const { toast } = useToast()
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -32,6 +37,11 @@ export default function SignInForm() {
     },
   })
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [verified, setVerified] = useState(true);
+  const [id, setId] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     setIsSubmitting(true)
@@ -43,9 +53,18 @@ export default function SignInForm() {
       })
 
       if (!signInData?.ok) throw new Error('Sign in failed.')
-    
-      router.refresh()
-      router.push('/admin')
+
+      const session = await getSession()
+      if (session?.user.isVerified) {
+        // router.refresh()
+        router.push('/admin')
+      }
+      else {
+        signOut({
+          redirect: true,
+          callbackUrl: `${window.location.origin}/sign-in?user=${JSON.stringify(session?.user)}`
+        })
+      }
 
     } catch (error: any) {
       console.error(error)
@@ -57,6 +76,65 @@ export default function SignInForm() {
     }
     setIsSubmitting(false)
   }
+
+  const sendMail = async () => {
+    try {
+
+      console.log('username', username)
+      const mailRes = await fetch('/api/mail/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username,
+          sendTo: email,
+          userId: id,
+          type: EmailType.EmailValidation
+        })
+      })
+
+      if (!mailRes.ok) throw new Error('Invoke /api/mail/send failed.')
+      
+      toast({
+        title: "Resend verification mail successfully",
+      })
+
+    } catch (error: any) {
+      console.error('Send mail failed', error)
+      toast({
+        title: "Resend mail failed",
+        description: "Something went wrong, you might contact the admin.",
+        variant: 'destructive'
+      })
+    }
+  }
+
+  useEffect(() => {
+    var userUrl = window.location.search.split("=")[1];
+    if (!userUrl) {
+      setVerified(true);
+    }
+    else {
+      const user = JSON.parse(decodeURI(userUrl))
+      //console.log('username', user.username)
+      setVerified(user.isVerified)
+      setUsername(user.username)
+      setId(user.id)
+      setEmail(user.email)
+    }
+  }, []);
+
+  useEffect(() => {
+    //console.log('username', username)
+    if (!verified) {
+      toast({
+        title: 'Sign up not completed',
+        description: 'Please verify your account email.',
+        action: <ToastAction altText="Resend Mail" onClick={sendMail}>Resend Mail</ToastAction>
+      })
+    }
+  }, [verified]);
 
   return (
     <Form {...form}>
@@ -101,5 +179,6 @@ export default function SignInForm() {
         <Link className='text-green-500 hover:underline' href="/sign-up">Sign Up</Link>
       </p>
     </Form>
+
   )
 }

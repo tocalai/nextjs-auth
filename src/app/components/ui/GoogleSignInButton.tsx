@@ -13,14 +13,17 @@ const GoogleSignInButton = ({
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const loginWithGoogle =  async () => {
         setIsSubmitting(true)
-        const signInData = await signIn('google', {callbackUrl: "/admin"})
-        console.log(signInData)
+        try {
+            const signInData = await signIn('google', {callbackUrl: "/admin"})
+            console.log(signInData)
+        }catch (error : any) {
+            console.error(error)
+        } 
         setIsSubmitting(false)
     }
 
     return (
         <div>
-            {/* <Button onClick={loginWithGoogle} className="w-full">{children}</Button> */}
             <SpinnerButton onClick={loginWithGoogle} name={children as string} state={isSubmitting} disabled={isSubmitting} className='w-full' />
         </div>
     )

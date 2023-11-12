@@ -8,9 +8,8 @@ export async function middleware(request: NextRequest) {
 
     const path = request.nextUrl.pathname
 
-    const isPublicPath = path === '/sign-in' || path === '/sign-up' || path === '/verify-mail'
+    const isPublicPath = anonymousPaths.find(anonymous => anonymous === path)
 
-    //const token = request.cookies.get('token')?.value || ''
     const token = await getToken({
         req: request,
         secret: process.env.NEXTAUTH_SECRET,
@@ -25,6 +24,11 @@ export async function middleware(request: NextRequest) {
     }
 }
 
+const anonymousPaths = [
+    '/sign-in',
+    '/sign-up',
+    '/verify-mail'
+]
 
 export const config = {
     matcher: [

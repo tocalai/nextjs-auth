@@ -16,13 +16,13 @@ export const authOptions: NextAuthOptions = {
     },
     providers: [
         CredentialsProvider({
-            name: 'Credentials',
+            name: 'credentials',
             credentials: {
                 email: { label: "Email", type: "email", placeholder: "jsmith@abc.com" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                //console.log('authroized', credentials)
+                console.log('authroized', credentials)
                 if (!credentials?.email || !credentials?.password) return null
 
                 const user = await db.user.findUnique({
@@ -33,13 +33,12 @@ export const authOptions: NextAuthOptions = {
 
                 const isPasswordMatch = await bcrypt.compare(credentials.password, user.password)
 
-                console.log('EmailVerified: ', user.emailVerified)
-                if (isPasswordMatch && !user.emailVerified) {
+                if (isPasswordMatch) {
                     return {
                         id: `${user.id}`,
                         username: user.username,
                         email: user.email,
-                        emailVerified: user.emailVerified
+                        isVerified: user.emailVerified ? true : false
                     }
                 }
 
@@ -57,37 +56,37 @@ export const authOptions: NextAuthOptions = {
                     response_type: "code"
                 }
             },
+            async profile(profile: GoogleProfile) {
 
-            
-            async profile (profile: GoogleProfile) {
-                
                 const hashPassword = await bcrypt.hash('password', 10)
                 return {
-                  id: profile.sub,
-                  email: profile.email,
-                  image: profile.avatar_url,
-                  username: profile.name,
-                  password: hashPassword
+                    id: profile.sub,
+                    email: profile.email,
+                    image: profile.avatar_url,
+                    username: profile.name,
+                    password: hashPassword,
+                    isVerified: profile.email_verified
                 }
             }
         })
     ],
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
-            console.log(account)
+            //console.log('Sign-in', user)
             //if (!user) return false
-            
-            return true
+            return Promise.resolve(true); // Return true to allow sign-in
+
         },
         // async redirect({ url, baseUrl }) {
         //     return baseUrl
         // },
         async jwt({ token, user, profile }) {
-            
             if (user) {
                 return {
                     ...token,
-                    username: user.username
+                    id: user.id,
+                    username: user.username,
+                    isVerified: user.isVerified
                 }
             }
 
@@ -98,11 +97,13 @@ export const authOptions: NextAuthOptions = {
                 ...session,
                 user: {
                     ...session.user,
-                    username: token.username
+                    id: token.id,
+                    username: token.username,
+                    isVerified: token.isVerified
                 }
             }
-            
-            
+
+
         }
     }
 }

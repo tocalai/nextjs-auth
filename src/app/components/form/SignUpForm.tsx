@@ -12,6 +12,7 @@ import { useToast } from '@/components/ui/use-toast'
 import SpinnerButton from '../ui/SpinnerButton '
 import { useState } from 'react'
 import { validatePassword } from '@/lib/utils'
+import { EmailType } from '@/types/enums'
 
 
 const FormSchema = z.object({
@@ -72,7 +73,7 @@ export default function SignUpForm() {
                     username: values.username,
                     sendTo: values.email,
                     userId: user.id,
-                    type: emailType.emailValidation
+                    type: EmailType.EmailValidation
                 })
             })
 
