@@ -2,11 +2,21 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator";
 
 const Page = () => {
   const [token, setToken] = useState("");
   const [verified, setVerified] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
 
   const verifyUserEmail = async () => {
     try {
@@ -24,8 +34,8 @@ const Page = () => {
 
       setVerified(true);
     } catch (error: any) {
-      console.log(error.reponse.data);
-      setError(true);
+      console.error(error);
+      setError(error.message);
     }
 
   }
@@ -39,30 +49,31 @@ const Page = () => {
   useEffect(() => {
     if (token.length > 0) {
       verifyUserEmail();
+    } else {
+      setError('Without Token Information')
     }
   }, [token]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <Card className="w-[350px]">
+      <CardHeader>
+        <CardTitle>Verifying Email...</CardTitle>
 
-      <h1 className="text-4xl">Verify Email</h1>
-      <h2 className="p-2 bg-orange-500 text-black">{token ? `${token}` : "no token"}</h2>
-
-      {verified && (
-        <div>
-          <h2 className="text-2xl">Email Verified</h2>
-          <Link href="/sign-in">
-            Sign In
-          </Link>
-        </div>
-      )}
-      {error && (
-        <div>
-          <h2 className="text-2xl bg-red-500 text-black">Error</h2>
-
-        </div>
-      )}
-    </div>
+      </CardHeader>
+      <CardContent>
+        <h2 className="p-2 bg-orange-500 text-black">{token ? `${token}` : "No Token"}</h2>
+        <Separator className="my-4" />
+        { verified ? (<h2 className="p-2 bg-green-950 text-slate-300">Passed</h2>) : (<h2 className="p-2 bg-red-950 text-slate-300">Failed, error: `${error}`</h2>)}
+      </CardContent>
+      <CardFooter className="flex justify-center">
+        {(!token || !verified) && (
+          <Button variant="outline">Resend Email Verification</Button>
+        )}
+        {verified && (
+          <Link className='text-lime-100 hover:underline' href="/sign-in">Sign In</Link>
+        )}
+      </CardFooter>
+    </Card>
   )
 }
 

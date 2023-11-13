@@ -131,7 +131,7 @@ export default function SignInForm() {
       toast({
         title: 'Sign up not completed',
         description: 'Please verify your account email.',
-        action: <ToastAction altText="Resend Mail" onClick={sendMail}>Resend Mail</ToastAction>
+        action: <ToastAction altText="Resend Email Verification" onClick={sendMail}>Resend Mail</ToastAction>
       })
     }
   }, [verified]);
