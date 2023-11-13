@@ -56,7 +56,7 @@ export default function SignInForm() {
 
       const session = await getSession()
       if (session?.user.isVerified) {
-        // router.refresh()
+        router.refresh()
         router.push('/admin')
       }
       else {
@@ -131,7 +131,7 @@ export default function SignInForm() {
       toast({
         title: 'Sign up not completed',
         description: 'Please verify your account email.',
-        action: <ToastAction altText="Resend Email Verification" onClick={sendMail}>Resend Mail</ToastAction>
+        action: <ToastAction altText="Resend Email Verification" onClick={sendMail}>Resend Email</ToastAction>
       })
     }
   }, [verified]);

@@ -12,6 +12,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+
 
 const Page = () => {
   const [token, setToken] = useState("");
@@ -55,14 +57,16 @@ const Page = () => {
   }, [token]);
 
   return (
-    <Card className="w-[350px]">
+    <Card className="w-[750px]">
       <CardHeader>
-        <CardTitle>Verifying Email...</CardTitle>
+        <CardTitle className="text-center">Verifying Email...</CardTitle>
 
       </CardHeader>
       <CardContent>
-        <h2 className="p-2 bg-orange-500 text-black">{token ? `${token}` : "No Token"}</h2>
+        <Label>Token</Label>
+        <h2 className="p-2 bg-orange-500 text-black flex-wrap">{token ? `${token}` : "No Token"}</h2>
         <Separator className="my-4" />
+        <Label>Result</Label>
         { verified ? (<h2 className="p-2 bg-green-950 text-slate-300">Passed</h2>) : (<h2 className="p-2 bg-red-950 text-slate-300">Failed, error: `${error}`</h2>)}
       </CardContent>
       <CardFooter className="flex justify-center">
@@ -70,7 +74,7 @@ const Page = () => {
           <Button variant="outline">Resend Email Verification</Button>
         )}
         {verified && (
-          <Link className='text-lime-100 hover:underline' href="/sign-in">Sign In</Link>
+          <Link className='text-lime-100 bg-slate-950 rounded-md hover:underline' href="/sign-in">Sign In</Link>
         )}
       </CardFooter>
     </Card>
