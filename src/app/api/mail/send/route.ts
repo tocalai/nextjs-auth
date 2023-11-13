@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json()
         const { username, sendTo, userId, type } = body
         const token = await bcrypt.hash(userId, 10)
+        const expired = Number(process.env.TOKEN_EXPIRE_LIFE_TIME)
 
         // store token to db
         const newVerificationToken = await db.verificationToken.create({
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
             {
                 identifier: userId,
                 token: token,
-                expires: new Date(Date.now() + 360000) // expired one hour
+                expires: new Date(Date.now() + expired) // expired one hour
             }
         })
 
