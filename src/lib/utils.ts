@@ -28,3 +28,7 @@ export function validatePassword(password: string): boolean {
   // check true if all conditions are met
   return hasLower && hasUpper && hasDigit && hasSpecialChar && hasMinLength;
 }
+
+export function isNullOrUndefined(value: any) {
+  return value === undefined || value === null;
+}

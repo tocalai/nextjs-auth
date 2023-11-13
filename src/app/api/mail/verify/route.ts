@@ -9,16 +9,16 @@ export async function POST(req: NextRequest) {
         const { token } = body
 
         const verificationToken = await db.verificationToken.findUnique({
-            where: { token: token, expires: {gte: new Date()}}
+            where: { token: token, expires: { gte: new Date() } }
         })
 
-        if (!verificationToken) return NextResponse.json({ message: "Token not found or expired.", status: 500 })
+        if (!verificationToken) return NextResponse.json({ message: "Token not found or expired." }, { status: 500 })
 
         const user = await db.user.findUnique({
             where: { id: verificationToken.identifier }
         })
 
-        if (!user) return NextResponse.json({ message: "User not found.", status: 500 })
+        if (!user) return NextResponse.json({ message: "User not found." }, { status: 500 })
 
         const updateUser = await db.user.update({
             where: { id: verificationToken.identifier },
@@ -28,13 +28,13 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        if (!updateUser) return NextResponse.json({ message: "Updated user failed.", status: 500 })
+        if (!updateUser) return NextResponse.json({ message: "Updated user failed." }, { status: 500 })
 
-        return NextResponse.json({message: 'Email verified successfully.', status: 201});
+        return NextResponse.json({ message: 'Email verified successfully.' });
 
     }
     catch (error: any) {
         console.log(error)
-        return NextResponse.json({ message: "Something went wrong", status: 500 })
+        return NextResponse.json({ message: "Something went wrong." }, { status: 500 })
     }
 }

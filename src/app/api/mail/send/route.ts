@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt'
 import { db } from "@/lib/db"
 import ResetPasswordTemplate from '@/app/components/mail/ResetPasswordTemplate';
 import { EmailType } from '@/types/enums';
+import { isNullOrUndefined } from '@/lib/utils';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        if (!newVerificationToken) return NextResponse.json({ message: "VerificationToken create failed.", status: 500 })
+        if (!newVerificationToken) return NextResponse.json({ message: "VerificationToken create failed." }, { status: 500 })
 
         const getMailTemple = (type: EmailType): React.JSX.Element => {
             switch (type) {
@@ -56,12 +57,14 @@ export async function POST(req: NextRequest) {
             react: getMailTemple(type)
         });
 
-        if (!result.error)  return NextResponse.json({result: result, message: 'Mail has been submitted.', status: 201});
+        console.log(result)
 
-        return NextResponse.json({result:result, message: "Send email failed.", status: 500 })
-       
+        if (!isNullOrUndefined(result.data)) return NextResponse.json({ result: result, message: 'Mail has been submitted.' });
+
+        return NextResponse.json({ result: result, message: "Send email occurred error." }, { status: 500 })
+
     } catch (error: any) {
         console.log(error)
-        return NextResponse.json({ message: "Something went wrong", status: 500 })
+        return NextResponse.json({ message: "Something went wrong. " }, { status: 500 })
     }
 }

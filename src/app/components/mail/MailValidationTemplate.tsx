@@ -34,7 +34,7 @@ const MailValidationTemplate = ({
                             <Text>
                                 Welcome to onboard. Click below button to verfiy and active your account.
                             </Text>
-                            <Button
+                            <Button className='bg-slate-300 text-gray-700'
                                 href={verifyUri}
                             >
                                 Verify Your Email

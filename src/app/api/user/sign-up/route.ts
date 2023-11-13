@@ -16,11 +16,11 @@ export async function POST(req: Request) {
         const { email, username, password } = userSchema.parse(body)
         // check if email already existed
         const userByEmail = await db.user.findUnique({
-            where: {email: email}
+            where: { email: email }
         })
-        
-        if(userByEmail) {
-            return NextResponse.json({user: null, message: 'Email with the user already existed.', status: 409})
+
+        if (userByEmail) {
+            return NextResponse.json({ user: null, message: 'Email with the user already existed.' }, { status: 409 })
         }
 
         // store user info into db       
@@ -32,14 +32,14 @@ export async function POST(req: Request) {
                 password: hashedPassword
             }
         })
-        
-        if(!newUser) return NextResponse.json({ message: "User create failed.", status: 500 })
 
-        const {password: newUserPassword, ...userWithoutPassword} = newUser
-        return NextResponse.json({user: userWithoutPassword, message: 'User created successfully.', status: 201})
+        if (!newUser) return NextResponse.json({ message: "User create failed." }, { status: 500 })
+
+        const { password: newUserPassword, ...userWithoutPassword } = newUser
+        return NextResponse.json({ user: userWithoutPassword, message: 'User created successfully.' })
 
     } catch (error: any) {
         console.log(error)
-        return NextResponse.json({ message: "Something went wrong", status: 500 })
+        return NextResponse.json({ message: "Something went wrong." }, { status: 500 })
     }
 }
