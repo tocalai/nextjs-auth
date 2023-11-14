@@ -13,6 +13,7 @@ import SpinnerButton from '../ui/SpinnerButton '
 import { useState } from 'react'
 import { validatePassword } from '@/lib/utils'
 import { EmailType } from '@/types/enums'
+import PasswordCriteriaCard from '../ui/PasswordCriteriaCard'
 
 
 const FormSchema = z.object({
@@ -70,8 +71,6 @@ export default function SignUpForm() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: values.username,
-                    sendTo: values.email,
                     userId: user.id,
                     type: EmailType.EmailValidation
                 })
@@ -130,7 +129,11 @@ export default function SignUpForm() {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <div>
+                                    <FormLabel>Password</FormLabel>
+                                    <PasswordCriteriaCard />
+                                </div>
+
                                 <FormControl>
                                     <Input placeholder="Input your password" type='password' {...field} />
                                 </FormControl>

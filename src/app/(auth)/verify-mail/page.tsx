@@ -63,7 +63,7 @@ const Page = () => {
       if (!mailRes.ok) throw new Error('Invoke /api/mail/send failed.')
       toast({
         title: 'Resend verification mail successfully',
-        action: <ToastAction altText="Close Window" onClick={() => {window.close()}}>Close Window</ToastAction>
+        action: <ToastAction altText="Close Window" onClick={() => { window.close() }}>Close Window</ToastAction>
       })
 
     } catch (error: any) {
@@ -103,10 +103,13 @@ const Page = () => {
         <h2 className="p-2 bg-orange-500 text-black flex-wrap">{token ? `${token}` : "No Token"}</h2>
         <Separator className="my-4" />
         <Label>Result</Label>
-        { verified ? (<h2 className="p-2 bg-green-950 text-slate-300">Passed</h2>) : (<h2 className="p-2 bg-red-950 text-slate-300">Failed, error: `${error}`</h2>)}
+        {verified ? (<h2 className="p-2 bg-green-950 text-slate-300">Passed</h2>) :
+          (
+            <h2 className="p-2 bg-red-950 text-slate-300">Failed, error: `${error}`</h2>
+          )}
       </CardContent>
       <CardFooter className="flex justify-center">
-        {(!userId || !verified) && (
+        {(userId && !verified) && (
           <Button variant="outline" onClick={sendMail}>Resend Email Verification</Button>
         )}
         {verified && (
