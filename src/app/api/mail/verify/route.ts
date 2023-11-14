@@ -12,13 +12,13 @@ export async function POST(req: NextRequest) {
             where: { token: token, expires: { gte: new Date() } }
         })
 
-        if (!verificationToken) return NextResponse.json({ message: "Token not found or expired." }, { status: 500 })
+        if (!verificationToken) return NextResponse.json({ message: "Token not found or expired."}, { status: 500 })
 
-        const user = await db.user.findUnique({
+        const userFromToken = await db.user.findUnique({
             where: { id: verificationToken.identifier }
         })
 
-        if (!user) return NextResponse.json({ message: "User not found." }, { status: 500 })
+        if (!userFromToken) return NextResponse.json({ message: "User not found."}, { status: 500 })
 
         const updateUser = await db.user.update({
             where: { id: verificationToken.identifier },
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     }
     catch (error: any) {
-        console.log(error)
+        console.error(error)
         return NextResponse.json({ message: "Something went wrong." }, { status: 500 })
     }
 }

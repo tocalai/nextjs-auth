@@ -39,9 +39,6 @@ export default function SignInForm() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [verified, setVerified] = useState(true);
   const [id, setId] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     setIsSubmitting(true)
@@ -80,15 +77,12 @@ export default function SignInForm() {
   const sendMail = async () => {
     try {
 
-      console.log('username', username)
       const mailRes = await fetch('/api/mail/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          username: username,
-          sendTo: email,
           userId: id,
           type: EmailType.EmailValidation
         })
@@ -117,16 +111,12 @@ export default function SignInForm() {
     }
     else {
       const user = JSON.parse(decodeURI(userUrl))
-      //console.log('username', user.username)
       setVerified(user.isVerified)
-      setUsername(user.username)
       setId(user.id)
-      setEmail(user.email)
     }
   }, []);
 
   useEffect(() => {
-    //console.log('username', username)
     if (!verified) {
       toast({
         title: 'Sign up not completed',

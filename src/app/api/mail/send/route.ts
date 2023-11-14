@@ -7,16 +7,25 @@ import { db } from "@/lib/db"
 import ResetPasswordTemplate from '@/app/components/mail/ResetPasswordTemplate';
 import { EmailType } from '@/types/enums';
 import { isNullOrUndefined } from '@/lib/utils';
+import { constants } from 'fs/promises';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()
-        const { username, sendTo, userId, type } = body
+        const { userId, type } = body
         const token = await bcrypt.hash(userId, 10)
         const expired = Number(process.env.TOKEN_EXPIRE_LIFE_TIME)
 
+        const user = await db.user.findUnique({
+            where: { id: userId }
+        })
+
+        if (!user) return NextResponse.json({ message: "User not found." }, { status: 500 })
+
+        const username = user.username
+        const sendTo = user.email
         // store token to db
         const newVerificationToken = await db.verificationToken.create({
             data:
@@ -32,7 +41,7 @@ export async function POST(req: NextRequest) {
         const getMailTemple = (type: EmailType): React.JSX.Element => {
             switch (type) {
                 case EmailType.EmailValidation:
-                    return (MailValidationTemplate({ username: username, token: token }))
+                    return (MailValidationTemplate({ id: userId, username: username, token: token }))
                 case EmailType.ResetPassword:
                     return (ResetPasswordTemplate({ username: username, token: token }))
                 default:
@@ -58,7 +67,6 @@ export async function POST(req: NextRequest) {
             react: getMailTemple(type)
         });
 
-        console.log(result)
 
         if (!isNullOrUndefined(result.data)) return NextResponse.json({ result: result, message: 'Mail has been submitted.' });
 

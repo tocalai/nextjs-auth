@@ -1,5 +1,5 @@
 
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { hash } from "bcrypt"
 import * as z from 'zod'
 import { db } from "@/lib/db"
@@ -10,7 +10,7 @@ const userSchema = z.object({
     password: z.string().min(1, 'Password is required.'),
 })
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
         const body = await req.json()
         const { email, username, password } = userSchema.parse(body)

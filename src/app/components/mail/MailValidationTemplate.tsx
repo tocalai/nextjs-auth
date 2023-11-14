@@ -13,15 +13,17 @@ import {
 import { Tailwind } from '@react-email/tailwind';
 
 interface MailTemplateProps {
+    id: string
     username: string
     token: string
 }
 
 const MailValidationTemplate = ({
+    id,
     username,
     token
 }: MailTemplateProps) => {
-    const verifyUri = `${process.env.NEXTAUTH_URL}/verify-mail?token=${token}`
+    const verifyUri = `${process.env.NEXTAUTH_URL}/verify-mail?id=${id}&token=${token}`
     return (
         <Html>
             <Head />
