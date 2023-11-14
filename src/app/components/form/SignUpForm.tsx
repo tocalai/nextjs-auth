@@ -129,7 +129,7 @@ export default function SignUpForm() {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <div>
+                                <div className=' items-center flex justify-between'>
                                     <FormLabel>Password</FormLabel>
                                     <PasswordCriteriaCard />
                                 </div>
