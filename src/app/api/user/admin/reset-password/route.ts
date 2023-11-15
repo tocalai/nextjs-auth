@@ -1,13 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from "@/lib/db"
-import { hash } from "bcrypt"
+import * as bcrypt from "bcrypt"
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()
-        const { id, newPassword } = body
+        const { id, oldPassword, newPassword } = body
 
-        const hashedPassword = await hash(newPassword, 10)
+        const user = await db.user.findUnique({
+            where: {id: id}
+        })
+
+        if (!user) return NextResponse.json({ message: "User not found." }, { status: 500 })
+
+        const hashOldPassword = await bcrypt.hash(oldPassword, 10)
+        const isPasswordMatch = await bcrypt.compare(hashOldPassword, user.password)
+
+        if (!isPasswordMatch) return NextResponse.json({ message: "Old passwrod not match." }, { status: 500 })
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
 
         const updateUser = await db.user.update({
             where: { id: id },

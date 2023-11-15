@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
         }
 
         const result = await resend.emails.send({
-            from: 'No-relpy <onboarding@resend.dev>',
+            from: 'No-relpy <onboarding@ducky-studio.xyz>',
             to: [`${sendTo}`],
             subject: getSubject(type),
             react: getMailTemple(type)

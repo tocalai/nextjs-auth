@@ -22,15 +22,15 @@ const FormSchema = z.object({
     password: z.string().min(1, 'Password is required.'),
     confirmPassword: z.string().min(1, 'Password confirmation is required.')
 })
-    .refine((data) => data.password === data.confirmPassword, {
-        path: ["confirmPassword"],
-        message: "Password not match."
-    })
-    .refine((data) => validatePassword(data.password),
-        {
-            path: ["password"],
-            message: "Password not meet the criteria."
-        })
+.refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Password not match."
+})
+.refine((data) => validatePassword(data.password),
+{
+    path: ["password"],
+    message: "Password not meet the criteria."
+})
 
 
 
