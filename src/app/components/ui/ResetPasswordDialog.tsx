@@ -55,23 +55,25 @@ const ResetPasswordDialog = () => {
       <DialogTrigger asChild>
         <Button variant="outline">Reset Password</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]"  onInteractOutside={(e) => {
+          e.preventDefault();
+        }}>
         <DialogHeader>
-          <DialogTitle>Password Reset</DialogTitle>
+          {/* <DialogTitle>Password Reset</DialogTitle> */}
           <DialogDescription>
-            Reset your password here, please following these <PasswordCriteriaCard />.
+            Reset your password here, please following these <PasswordCriteriaCard className=""/>.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(resetPassword)} className="w-full">
-            <div className="grid grid-cols-4 items-center gap-4">
+          <form onSubmit={form.handleSubmit(resetPassword)} className="">
+            <div className="flex-col items-center gap-4">
               <FormField
                 control={form.control}
                 name="oldPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <div className=' text-right'>
+                    <div className=''>
                       <FormLabel>Old Password</FormLabel>
                     </div>
                     <FormControl>
@@ -86,7 +88,7 @@ const ResetPasswordDialog = () => {
                 name="newPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <div className='text-right'>
+                    <div className=''>
                       <FormLabel>Password</FormLabel>
                     </div>
                     <FormControl>
@@ -101,7 +103,7 @@ const ResetPasswordDialog = () => {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <div className='text-right'>
+                    <div className=''>
                       <FormLabel>Confirm Password</FormLabel>
                     </div>
                     <FormControl>
@@ -113,10 +115,10 @@ const ResetPasswordDialog = () => {
 
               />
             </div>
-            <DialogFooter>
-              <DialogTrigger asChild>
+            <DialogFooter className="pt-6">
+              {/* <DialogTrigger asChild> */}
                 <Button type="submit" disabled={isPending}>Save Changes</Button>
-              </DialogTrigger>
+              {/* </DialogTrigger> */}
             </DialogFooter>
           </form>
         </Form>

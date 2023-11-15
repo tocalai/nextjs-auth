@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button"
+import { Button, ButtonProps } from "@/components/ui/button"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 
 
-const PasswordCriteriaCard = () => {
+const PasswordCriteriaCard = ({...props} : ButtonProps) => {
     return (
         <HoverCard>
             <HoverCardTrigger asChild>
-                <Button variant="link">(Criteria)</Button>
+                <Button variant="link" {...props}>(Criteria)</Button>
             </HoverCardTrigger>
             <HoverCardContent className="w-120">
                 <li>contains at least one lower character</li>
