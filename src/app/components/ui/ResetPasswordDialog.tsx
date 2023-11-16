@@ -33,6 +33,7 @@ const ResetPasswordDialog = () => {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string>('')
   const [isFault, setFault] = useState<boolean>(false)
+  const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -81,7 +82,7 @@ const ResetPasswordDialog = () => {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Reset Password</Button>
       </DialogTrigger>
