@@ -9,7 +9,8 @@ import { validatePassword } from "@/lib/utils"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
+import { getSession } from "next-auth/react"
 
 const FormSchema = z.object({
   oldPassword: z.string().min(1, 'Filed is reqired.'),
@@ -28,6 +29,8 @@ const FormSchema = z.object({
 
 const ResetPasswordDialog = () => {
   const [isPending, startTransition] = useTransition();
+  const [message, setMessage] = useState<string>('')
+  const [isFault, setFault] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -38,15 +41,37 @@ const ResetPasswordDialog = () => {
     },
   })
 
-
   const resetPassword = async (values: z.infer<typeof FormSchema>) => {
     try {
-      startTransition(() => {
-        
+      startTransition(async () => {
+        const session = await getSession()
+        const userRes = await fetch('/api/user/admin/reset-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: session?.user.id,
+            oldPassword: values.oldPassword,
+            newPassword: values.newPassword
+          })
+        })
+
+        if (!userRes.ok) {
+          const { message } = await userRes.json()
+          setMessage(`Reset password failed, ${message}`)
+          setFault(true)
+        }
+        else {
+          setMessage('Reset password successfully.')
+        }
+
       })
     }
     catch (error: any) {
       console.error(error)
+      setMessage(`Reset password failed, ${error.message}`)
+      setFault(true)
     }
   }
 
@@ -55,13 +80,13 @@ const ResetPasswordDialog = () => {
       <DialogTrigger asChild>
         <Button variant="outline">Reset Password</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]"  onInteractOutside={(e) => {
-          e.preventDefault();
-        }}>
+      <DialogContent className="sm:max-w-[425px]" onInteractOutside={(e) => {
+        e.preventDefault();
+      }}>
         <DialogHeader>
           {/* <DialogTitle>Password Reset</DialogTitle> */}
           <DialogDescription>
-            Reset your password here, please following these <PasswordCriteriaCard className=""/>.
+            Reset your password here, please following these <PasswordCriteriaCard className="" />.
           </DialogDescription>
         </DialogHeader>
 
@@ -117,11 +142,22 @@ const ResetPasswordDialog = () => {
             </div>
             <DialogFooter className="pt-6">
               {/* <DialogTrigger asChild> */}
-                <Button type="submit" disabled={isPending}>Save Changes</Button>
+              <Button type="submit" disabled={isPending}>Save Changes</Button>
               {/* </DialogTrigger> */}
             </DialogFooter>
           </form>
         </Form>
+        {/* <Alert>
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>{message}</AlertTitle>
+        </Alert> */}
+        {/* <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            {message}
+          </AlertDescription>
+        </Alert> */}
       </DialogContent>
     </Dialog>
   )
