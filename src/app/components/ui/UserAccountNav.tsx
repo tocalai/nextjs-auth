@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button"
 import { signOut } from "next-auth/react"
 import ResetPasswordDialog from "./ResetPasswordDialog"
 import { Separator } from "@/components/ui/separator"
+import ProfileSheet from "./ProfileSheet"
 
 const UserAccountNav = () => {
   return (
     <>
-      <div>Profie</div>
+      <ProfileSheet />
       <ResetPasswordDialog/>
       <Separator orientation="vertical"/>
       <Button onClick={() => signOut({
