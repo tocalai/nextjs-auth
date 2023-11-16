@@ -11,6 +11,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useState, useTransition } from "react"
 import { getSession } from "next-auth/react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle, Check, Terminal, XCircle } from "lucide-react"
 
 const FormSchema = z.object({
   oldPassword: z.string().min(1, 'Filed is reqired.'),
@@ -45,6 +47,7 @@ const ResetPasswordDialog = () => {
     try {
       startTransition(async () => {
         const session = await getSession()
+
         const userRes = await fetch('/api/user/admin/reset-password', {
           method: 'POST',
           headers: {
@@ -64,6 +67,8 @@ const ResetPasswordDialog = () => {
         }
         else {
           setMessage('Reset password successfully.')
+          setFault(false)
+          form.reset()
         }
 
       })
@@ -86,7 +91,7 @@ const ResetPasswordDialog = () => {
         <DialogHeader>
           {/* <DialogTitle>Password Reset</DialogTitle> */}
           <DialogDescription>
-            Reset your password here, please following these <PasswordCriteriaCard className="" />.
+            Reset your password here, please following these <PasswordCriteriaCard className="text-right" />.
           </DialogDescription>
         </DialogHeader>
 
@@ -147,17 +152,19 @@ const ResetPasswordDialog = () => {
             </DialogFooter>
           </form>
         </Form>
-        {/* <Alert>
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>{message}</AlertTitle>
-        </Alert> */}
-        {/* <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            {message}
-          </AlertDescription>
-        </Alert> */}
+        {message && !isFault &&(
+          <Alert>
+            <Check className="h-4 w-4" />
+            <AlertTitle>{message} You could close the dailog</AlertTitle>
+          </Alert>)}
+        {message && isFault && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              {message}
+            </AlertDescription>
+          </Alert>)}
       </DialogContent>
     </Dialog>
   )

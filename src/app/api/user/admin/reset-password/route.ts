@@ -13,9 +13,8 @@ export async function POST(req: NextRequest) {
 
         if (!user) return NextResponse.json({ message: "User not found." }, { status: 500 })
 
-        const hashOldPassword = await bcrypt.hash(oldPassword, 10)
-        const isPasswordMatch = await bcrypt.compare(hashOldPassword, user.password)
-
+        const isPasswordMatch = await bcrypt.compare(oldPassword, user.password)
+        console.log(isPasswordMatch)
         if (!isPasswordMatch) return NextResponse.json({ message: "Old passwrod not match." }, { status: 500 })
 
         const hashedPassword = await bcrypt.hash(newPassword, 10)
