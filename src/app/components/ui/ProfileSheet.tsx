@@ -5,6 +5,11 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import React from 'react'
 
 const ProfileSheet = () => {
+  
+  const updateUser = async () => {
+      const [username, setUsername] = useState()
+  }
+
   return (
     <Sheet>
     <SheetTrigger asChild>
@@ -33,7 +38,7 @@ const ProfileSheet = () => {
       </div>
       <SheetFooter>
         <SheetClose asChild>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" onClick={updateUser}>Save changes</Button>
         </SheetClose>
       </SheetFooter>
     </SheetContent>
