@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
         if(!updateUser) return NextResponse.json({ message: "Updated user failed." }, { status: 500 })
 
-        return NextResponse.json({ message: 'Reset password successfully.' });
+        return NextResponse.json({ message: 'Upate user successfully.' });
 
     }
     catch (error: any) {
