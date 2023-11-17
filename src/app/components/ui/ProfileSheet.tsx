@@ -50,6 +50,10 @@ const ProfileSheet = () => {
     }
   }
 
+  const onUsernameChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value)
+  }
+
   useEffect(() => {
     const getSessionData = async () => {
       const session = await getSession()
@@ -58,7 +62,7 @@ const ProfileSheet = () => {
       setId(session?.user.id || '')
     }
     getSessionData()
-  }, [id, username, email]);
+  }, [id]);
 
 
   return (
@@ -78,7 +82,7 @@ const ProfileSheet = () => {
             <Label htmlFor="username" className="text-right">
               Username
             </Label>
-            <Input id="username" value={username} className="col-span-3" />
+            <Input id="username" value={username} className="col-span-3" onChange={onUsernameChange}/>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="email" className="text-right">
