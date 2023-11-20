@@ -9,17 +9,19 @@ import { getSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
 const ProfileSheet = () => {
-  const [username, setUsername] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [id, setId] = useState<string>('')
+  const [form, setForm] = useState({
+    id: '',
+    username: '',
+    email: ''
+  })
 
   const updateUser = async () => {
     try {
-      if (!username) {
-        throw new Error('Username can not be empty.')
+      if (!form.username) {
+        throw new Error('Username can not be empty')
       }
-      if (!id) {
-        throw new Error('User identity not found.')
+      if (!form.id) {
+        throw new Error('User identity not found')
       }
 
       const userRes = await fetch('/api/user/admin/update', {
@@ -28,8 +30,8 @@ const ProfileSheet = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id: id,
-          username: username
+          id: form.id,
+          username: form.username
         })
       })
 
@@ -44,25 +46,32 @@ const ProfileSheet = () => {
       console.error(error)
       toast({
         title: "Update user failed",
-        description: `Something went wrong, {error.message}.`,
+        description: `Something went wrong, ${error.message}.`,
         variant: 'destructive'
       })
     }
   }
 
-  const onUsernameChange = (e : React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
   }
 
   useEffect(() => {
     const getSessionData = async () => {
       const session = await getSession()
-      setUsername(session?.user.username || '')
-      setEmail(session?.user.email || '')
-      setId(session?.user.id || '')
+      setForm((prev) => ({
+        ...prev,
+        id: session?.user.id || '',
+        username: session?.user.username || '',
+        email: session?.user.email || ''
+      }))
+
     }
     getSessionData()
-  }, [id]);
+  }, [form.id]);
 
 
   return (
@@ -71,24 +80,26 @@ const ProfileSheet = () => {
         <Button variant="outline">Edit Profile</Button>
       </SheetTrigger>
       <SheetContent>
+
         <SheetHeader>
           {/* <SheetTitle>Edit profile</SheetTitle> */}
           <SheetDescription>
             Make changes to your profile here. Click save when you're done.
           </SheetDescription>
         </SheetHeader>
+
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
               Username
             </Label>
-            <Input id="username" value={username} className="col-span-3" onChange={onUsernameChange}/>
+            <Input name="username" id="username" value={form.username} className="col-span-3" onChange={handleChange} />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="email" className="text-right">
               Email
             </Label>
-            <Input id="email" value={email} className="col-span-3" disabled />
+            <Input name="email" id="email" value={form.email} className="col-span-3" onChange={handleChange} disabled />
           </div>
         </div>
         <SheetFooter>
@@ -96,6 +107,7 @@ const ProfileSheet = () => {
             <Button type="submit" onClick={updateUser}>Save changes</Button>
           </SheetClose>
         </SheetFooter>
+
       </SheetContent>
     </Sheet>
   )
