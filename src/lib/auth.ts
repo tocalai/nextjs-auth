@@ -72,8 +72,14 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
-            //console.log('Sign-in', user)
-            //if (!user) return false
+            console.log('Sign-in', user)
+            // console.log('Profile', profile)
+
+            if (user && user?.isVerified) {
+                //update the login counter a nd timestamp
+                console.log('Count++')
+            }
+                
             return Promise.resolve(true); // Return true to allow sign-in
 
         },

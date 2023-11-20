@@ -46,6 +46,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   password      String
   isVerified    Boolean   @default(false)
+  count       Int       @default(0)
+  lastLogon     DateTime?
   accounts      Account[]
   sessions      Session[]
 }
