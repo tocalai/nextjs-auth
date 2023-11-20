@@ -76,8 +76,19 @@ export const authOptions: NextAuthOptions = {
             // console.log('Profile', profile)
 
             if (user && user?.isVerified) {
-                //update the login counter a nd timestamp
-                console.log('Count++')
+                const userRes = await fetch('/api/user/admin/update', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      id: user.id,
+                      count: 0,
+                      lastLogon: new Date()
+                    })
+                })
+
+                if (!userRes.ok) console.error(`Update user (${user.id}) logon data failed.`)
             }
                 
             return Promise.resolve(true); // Return true to allow sign-in
