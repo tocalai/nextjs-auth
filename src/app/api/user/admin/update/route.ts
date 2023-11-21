@@ -1,20 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from "@/lib/db"
+import { User } from 'next-auth';
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()
+        console.log('Find user', body)
+        // const { id, username  }: User = body
         const { id, username, count, lastLogon } = body
         
         const user = await db.user.findUnique({
             where: {id: id}
         })
-
+       
         if (!user) return NextResponse.json({ message: `Can nota found the user by id: ${id}.` }, { status: 500 })
         const addCount = user.count + 1
         const updateUser = await db.user.update({
             where: { id: id },
             data: {
+                // username: username,
                 ...(username && { username }),
                 ...(count && { addCount }),
                 ...(lastLogon && { lastLogon }),

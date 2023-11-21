@@ -32,13 +32,14 @@ export const authOptions: NextAuthOptions = {
                 if (!user) return null
 
                 const isPasswordMatch = await bcrypt.compare(credentials.password, user.password)
-
-                if (isPasswordMatch) {
+                const isVerified = user.emailVerified ? true : false
+                
+                if (isPasswordMatch) {                    
                     return {
                         id: `${user.id}`,
                         username: user.username,
                         email: user.email,
-                        isVerified: user.emailVerified ? true : false
+                        isVerified: isVerified
                     }
                 }
 
@@ -74,25 +75,7 @@ export const authOptions: NextAuthOptions = {
         async signIn({ user, account, profile, email, credentials }) {
             console.log('Sign-in', user)
             // console.log('Profile', profile)
-
-            if (user && user?.isVerified) {
-                const userRes = await fetch('/api/user/admin/update', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      id: user.id,
-                      count: 0,
-                      lastLogon: new Date()
-                    })
-                })
-
-                if (!userRes.ok) console.error(`Update user (${user.id}) logon data failed.`)
-            }
-                
             return Promise.resolve(true); // Return true to allow sign-in
-
         },
         // async redirect({ url, baseUrl }) {
         //     return baseUrl
@@ -122,5 +105,6 @@ export const authOptions: NextAuthOptions = {
 
 
         }
-    }
+    },
+    debug: process.env.NODE_ENV === 'development'
 }

@@ -34,8 +34,7 @@ export async function POST(req: NextRequest) {
         })
 
         if (!newUser) return NextResponse.json({ message: "User create failed." }, { status: 500 })
-
-// This code snippet extracts the password from the newUser object and assigns it to the newUserPassword variable. It then creates a new object called userWithoutPassword that contains all the properties of newUser except for the password. Finally, it returns a JSON response with the
+        
         const { password: newUserPassword, ...userWithoutPassword } = newUser
         return NextResponse.json({ user: userWithoutPassword, message: 'User created successfully.' })
 
