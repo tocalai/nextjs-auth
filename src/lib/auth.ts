@@ -32,15 +32,15 @@ export const authOptions: NextAuthOptions = {
                 if (!user) return null
 
                 const isPasswordMatch = await bcrypt.compare(credentials.password, user.password)
-                const isVerified = user.emailVerified ? true : false
-                
-                if (isPasswordMatch) {                    
-                    return {
-                        id: `${user.id}`,
-                        username: user.username,
-                        email: user.email,
-                        isVerified: isVerified
-                    }
+                            
+                if (isPasswordMatch) {    
+                    return user                
+                    // return {
+                    //     id: `${user.id}`,
+                    //     username: user.username,
+                    //     email: user.email,
+                    //     isVerified: isVerified
+                    // }
                 }
 
                 return null
@@ -66,7 +66,8 @@ export const authOptions: NextAuthOptions = {
                     image: profile.avatar_url,
                     username: profile.name,
                     password: hashPassword,
-                    isVerified: profile.email_verified
+                    isVerified: profile.email_verified,
+                    count: 0
                 }
             }
         })
@@ -74,6 +75,18 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
             console.log('Sign-in', user)
+
+            if (user && user.isVerified) {
+                const updateUser = await db.user.update({
+                    where: {id: user.id},
+                    data: {
+                        count: user.count + 1,
+                        lastLogon: new Date()
+                    }
+                })
+
+                if (!updateUser) console.error('Update failed', updateUser)
+            }
             // console.log('Profile', profile)
             return Promise.resolve(true); // Return true to allow sign-in
         },
@@ -97,9 +110,9 @@ export const authOptions: NextAuthOptions = {
                 ...session,
                 user: {
                     ...session.user,
-                    id: token.id,
-                    username: token.username,
-                    isVerified: token.isVerified
+                    // id: token.id,
+                    // username: token.username,
+                    // isVerified: token.isVerified
                 }
             }
 

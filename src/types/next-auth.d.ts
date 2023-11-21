@@ -8,17 +8,18 @@ declare module "next-auth" {
     interface User {
         username: string
         isVerified: boolean
+        count: number
     }
     interface Session {
         user: User & {
-            id: string
-            username: string
-            isVerified: boolean
+            // id: string
+            // username: string
+            // isVerified: boolean
         },
         token: {
-            id: string
-            username: string
-            isVerified: boolean
+            // id: string
+            // username: string
+            // isVerified: boolean
         }
     }
 }
