@@ -115,7 +115,7 @@ export const authOptions: NextAuthOptions = {
                 return Promise.resolve(false)
             }
 
-            return Promise.resolve(true); // Return true to allow sign-in
+            // return Promise.resolve(true); // Return true to allow sign-in
         },
         // async redirect({ url, baseUrl }) {
         //     return baseUrl

@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { toast } from '@/components/ui/use-toast'
-import { getSession } from 'next-auth/react'
+import { Session } from 'next-auth'
+import { getSession, useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
 const ProfileSheet = () => {
@@ -14,6 +15,8 @@ const ProfileSheet = () => {
     username: '',
     email: ''
   })
+
+  const { data: session } = useSession()
 
   const updateUser = async () => {
     try {
@@ -60,8 +63,9 @@ const ProfileSheet = () => {
   }
 
   useEffect(() => {
-    const getSessionData = async () => {
-      const session = await getSession()
+    // const getSessionData = async () => {
+    // const session = await getSession(new Headers().get('cookie') ?? '')
+
       setForm((prev) => ({
         ...prev,
         id: session?.user.id || '',
@@ -69,9 +73,10 @@ const ProfileSheet = () => {
         email: session?.user.email || ''
       }))
 
-    }
-    getSessionData()
-  }, [form]);
+    // }
+    // getSessionData()
+
+  }, [form.id]);
 
 
   return (
