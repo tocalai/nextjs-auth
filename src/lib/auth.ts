@@ -4,26 +4,25 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
 import * as bcrypt from 'bcrypt'
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google"
-import { Prisma, PrismaClient } from "@prisma/client"
+// import { Prisma, PrismaClient } from "@prisma/client"
 
-function CustomPrismaAdapter(client:  PrismaClient) {
-    return {
-        ...PrismaAdapter(client),
-        createUser: (data: any) => {
-            return client.user.create({
-                data: {
-                    ...data,
-                    count: 1,
-                    lastLogon: new Date()
-                }
-            })
+const customAdapter = PrismaAdapter(db);
+// @ts-ignore
+customAdapter.createUser = (data: any) => {
+    console.log("Data: ", data);
+
+    return db.user.create({
+        data: {
+            ...data,
+            count: 1,
+            lastLogon: new Date()
         }
-    }
+    })
+
 }
 
 export const authOptions: NextAuthOptions = {
-    adapter: PrismaAdapter(db),
-    // adapter: CustomPrismaAdapter(db),
+    adapter: customAdapter,
     secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: 'jwt'
@@ -93,11 +92,11 @@ export const authOptions: NextAuthOptions = {
         async signIn({ user, account, profile, email, credentials }) {
             console.log('Sign-in', user)
             try {
-                const getUser = await db.user.findUnique({
+                const userCount = await db.user.count({
                     where: { email: user.email as string }
                 })
 
-                if (getUser && user && user.isVerified) {
+                if (userCount > 0 && user && user.isVerified) {
                     const updateUser = await db.user.update({
                         where: { email: user.email as string },
                         data: {
@@ -138,9 +137,9 @@ export const authOptions: NextAuthOptions = {
                 ...session,
                 user: {
                     ...session.user,
-                    // id: token.id,
-                    // username: token.username,
-                    // isVerified: token.isVerified
+                    id: token.id,
+                    username: token.username,
+                    isVerified: token.isVerified
                 }
             }
 

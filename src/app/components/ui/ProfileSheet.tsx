@@ -71,7 +71,7 @@ const ProfileSheet = () => {
 
     }
     getSessionData()
-  }, [form.id]);
+  }, [form]);
 
 
   return (
