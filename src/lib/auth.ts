@@ -4,9 +4,26 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
 import * as bcrypt from 'bcrypt'
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google"
+import { Prisma, PrismaClient } from "@prisma/client"
+
+function CustomPrismaAdapter(client:  PrismaClient) {
+    return {
+        ...PrismaAdapter(client),
+        createUser: (data: any) => {
+            return client.user.create({
+                data: {
+                    ...data,
+                    count: 1,
+                    lastLogon: new Date()
+                }
+            })
+        }
+    }
+}
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
+    // adapter: CustomPrismaAdapter(db),
     secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: 'jwt'
@@ -32,9 +49,9 @@ export const authOptions: NextAuthOptions = {
                 if (!user) return null
 
                 const isPasswordMatch = await bcrypt.compare(credentials.password, user.password)
-                            
-                if (isPasswordMatch) {    
-                    return user                
+
+                if (isPasswordMatch) {
+                    return user
                     // return {
                     //     id: `${user.id}`,
                     //     username: user.username,
@@ -75,19 +92,30 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
             console.log('Sign-in', user)
-
-            if (user && user.isVerified) {
-                const updateUser = await db.user.update({
-                    where: {id: user.id},
-                    data: {
-                        count: user.count + 1,
-                        lastLogon: new Date()
-                    }
+            try {
+                const getUser = await db.user.findUnique({
+                    where: { email: user.email as string }
                 })
 
-                if (!updateUser) console.error('Update failed', updateUser)
+                if (getUser && user && user.isVerified) {
+                    const updateUser = await db.user.update({
+                        where: { email: user.email as string },
+                        data: {
+                            count: user.count + 1,
+                            lastLogon: new Date()
+                        }
+                    })
+
+                    if (!updateUser) throw new Error('Update failed', updateUser)
+                }
+
+                return Promise.resolve(true)
             }
-            // console.log('Profile', profile)
+            catch (error: any) {
+                console.error('Sign in failed', error.mesage)
+                return Promise.resolve(false)
+            }
+
             return Promise.resolve(true); // Return true to allow sign-in
         },
         // async redirect({ url, baseUrl }) {
