@@ -5,9 +5,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { toast } from '@/components/ui/use-toast'
-import { Session } from 'next-auth'
 import { getSession, useSession } from 'next-auth/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
+
 
 const ProfileSheet = () => {
   const [form, setForm] = useState({
@@ -15,11 +15,11 @@ const ProfileSheet = () => {
     username: '',
     email: ''
   })
-
-  // const { data: session } = useSession()
+  const { data: session } = useSession()
 
   const updateUser = async () => {
     try {
+
       if (!form.username) {
         throw new Error('Username can not be empty')
       }
@@ -55,6 +55,7 @@ const ProfileSheet = () => {
     }
   }
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({
       ...prev,
@@ -63,20 +64,14 @@ const ProfileSheet = () => {
   }
 
   useEffect(() => {
-    // const getSessionData = async () => {
-    // const session = await getSession(new Headers().get('cookie') ?? '')
+    setForm((prev) => ({
+      ...prev,
+      id: session?.user.id || '',
+      username: session?.user.username || '',
+      email: session?.user.email || ''
+    }))
 
-      // setForm((prev) => ({
-      //   ...prev,
-      //   id: session?.user.id || '',
-      //   username: session?.user.username || '',
-      //   email: session?.user.email || ''
-      // }))
-
-    // }
-    // getSessionData()
-
-  }, []);
+  }, [session]);
 
 
   return (
@@ -109,6 +104,7 @@ const ProfileSheet = () => {
         </div>
         <SheetFooter>
           <SheetClose asChild>
+            {/* <SaveProfileChangeButton username={form.username} id={form.id}/> */}
             <Button type="submit" onClick={updateUser}>Save changes</Button>
           </SheetClose>
         </SheetFooter>

@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useState, useTransition } from "react"
 import { getSession } from "next-auth/react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle, Check, Terminal, XCircle } from "lucide-react"
+import { AlertCircle, Check } from "lucide-react"
 
 const FormSchema = z.object({
   oldPassword: z.string().min(1, 'Filed is reqired.'),
