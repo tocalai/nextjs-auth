@@ -16,7 +16,7 @@ const ProfileSheet = () => {
     email: ''
   })
 
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
 
   const updateUser = async () => {
     try {
@@ -66,17 +66,17 @@ const ProfileSheet = () => {
     // const getSessionData = async () => {
     // const session = await getSession(new Headers().get('cookie') ?? '')
 
-      setForm((prev) => ({
-        ...prev,
-        id: session?.user.id || '',
-        username: session?.user.username || '',
-        email: session?.user.email || ''
-      }))
+      // setForm((prev) => ({
+      //   ...prev,
+      //   id: session?.user.id || '',
+      //   username: session?.user.username || '',
+      //   email: session?.user.email || ''
+      // }))
 
     // }
     // getSessionData()
 
-  }, [form.id]);
+  }, []);
 
 
   return (

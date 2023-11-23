@@ -4,13 +4,12 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
 import * as bcrypt from 'bcrypt'
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google"
+import { decode, encode } from "next-auth/jwt"
 // import { Prisma, PrismaClient } from "@prisma/client"
 
 const customAdapter = PrismaAdapter(db);
 // @ts-ignore
 customAdapter.createUser = (data: any) => {
-    console.log("Data: ", data);
-
     return db.user.create({
         data: {
             ...data,
@@ -27,6 +26,7 @@ export const authOptions: NextAuthOptions = {
     session: {
         strategy: 'jwt'
     },
+    jwt: { encode, decode },
     pages: {
         signIn: '/sign-in'
     },
