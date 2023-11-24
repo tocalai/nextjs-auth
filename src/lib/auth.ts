@@ -8,8 +8,8 @@ import { decode, encode } from "next-auth/jwt"
 // import { Prisma, PrismaClient } from "@prisma/client"
 
 const customAdapter = PrismaAdapter(db);
-// @ts-ignore
-customAdapter.createUser = (data: any) => {
+
+customAdapter.createUser = (data: any) :any => {
     return db.user.create({
         data: {
             ...data,

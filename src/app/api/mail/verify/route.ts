@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
         if (!updateUser) return NextResponse.json({ message: "Updated user failed." }, { status: 500 })
 
-        return NextResponse.json({ message: 'Email verified successfully.' });
+        return NextResponse.json({ message: 'Email verified successfully.' })
 
     }
     catch (error: any) {

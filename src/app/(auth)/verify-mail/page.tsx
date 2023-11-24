@@ -61,6 +61,7 @@ const Page = () => {
       })
 
       if (!mailRes.ok) throw new Error('Invoke /api/mail/send failed.')
+      
       toast({
         title: 'Resend verification mail successfully',
         action: <ToastAction altText="Close Window" onClick={() => { window.close() }}>Close Window</ToastAction>
