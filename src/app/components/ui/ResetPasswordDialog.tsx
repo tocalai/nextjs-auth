@@ -82,92 +82,96 @@ const ResetPasswordDialog = () => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Reset Password</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]" onInteractOutside={(e) => {
-        e.preventDefault();
-      }}>
-        <DialogHeader>
-          {/* <DialogTitle>Password Reset</DialogTitle> */}
-          <DialogDescription>
-            Reset your password here, please following these <PasswordCriteriaCard className="text-right" />.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline">Reset Password</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]" onInteractOutside={(e) => {
+          e.preventDefault();
+        }}>
+          <DialogHeader>
+            {/* <DialogTitle>Password Reset</DialogTitle> */}
+            <DialogDescription>
+              Reset your password here             
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(resetPassword)} className="">
+              <div className="flex-col items-center gap-4">
+                <FormField
+                  control={form.control}
+                  name="oldPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className=''>
+                        <FormLabel>Old Password</FormLabel>
+                      </div>
+                      <FormControl>
+                        <Input type='password' {...field} className='col-span-3' />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className=''>
+                        <FormLabel>Password</FormLabel>
+                        <PasswordCriteriaCard className="" />
+                      </div>
+                      
+                      <FormControl>
+                        <Input type='password' {...field} className='col-span-3' />
+                      </FormControl>
+                      
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className=''>
+                        <FormLabel>Confirm Password</FormLabel>
+                      </div>
+                      <FormControl>
+                        <Input type='password' {...field} className='col-span-3' />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(resetPassword)} className="">
-            <div className="flex-col items-center gap-4">
-              <FormField
-                control={form.control}
-                name="oldPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className=''>
-                      <FormLabel>Old Password</FormLabel>
-                    </div>
-                    <FormControl>
-                      <Input type='password' {...field} className='col-span-3' />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className=''>
-                      <FormLabel>Password</FormLabel>
-                    </div>
-                    <FormControl>
-                      <Input type='password' {...field} className='col-span-3' />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className=''>
-                      <FormLabel>Confirm Password</FormLabel>
-                    </div>
-                    <FormControl>
-                      <Input type='password' {...field} className='col-span-3' />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-
-              />
-            </div>
-            <DialogFooter className="pt-6">
-              {/* <DialogTrigger asChild> */}
-              <Button type="submit" disabled={isPending}>Save Changes</Button>
-              {/* </DialogTrigger> */}
-            </DialogFooter>
-          </form>
-        </Form>
-        {message && !isFault &&(
-          <Alert>
-            <Check className="h-4 w-4" />
-            <AlertTitle>{message} You could close the dailog</AlertTitle>
-          </Alert>)}
-        {message && isFault && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              {message}
-            </AlertDescription>
-          </Alert>)}
-      </DialogContent>
-    </Dialog>
+                />
+              </div>
+              <DialogFooter className="pt-6">
+                {/* <DialogTrigger asChild> */}
+                <Button type="submit" disabled={isPending}>Save Changes</Button>
+                {/* </DialogTrigger> */}
+              </DialogFooter>
+            </form>
+          </Form>
+          {message && !isFault && (
+            <Alert>
+              <Check className="h-4 w-4" />
+              <AlertTitle>{message} You could close the dailog</AlertTitle>
+            </Alert>)}
+          {message && isFault && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {message}
+              </AlertDescription>
+            </Alert>)}
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 

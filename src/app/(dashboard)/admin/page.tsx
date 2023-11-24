@@ -12,8 +12,11 @@ const page = async () => {
       })
 
       if (!usersRes.ok) throw new Error('Retrieved users failed')
+    
+      const {data} = await usersRes.json()
 
-      return usersRes.json()
+      console.log(data) 
+      return data
     }
     catch (error: any) {
       console.error(error.message)
@@ -25,8 +28,8 @@ const page = async () => {
     }
   }
 
-  const users = await getUsers()
-
+  await getUsers()
+  //console.log(data)
 }
 
 export default page
