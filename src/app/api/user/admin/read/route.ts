@@ -9,7 +9,8 @@ export async function GET(req: NextRequest) {
                 username: true,
                 isVerified: true,
                 count: true,
-                lastLogon: true
+                lastLogon: true,
+                createdAt: true
             }
         })
         // console.log(JSON.stringify((await allUsers).map(u => u)))

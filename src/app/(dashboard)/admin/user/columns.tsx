@@ -17,6 +17,10 @@ export const columns: ColumnDef<User>[] = [
         header: "Verified",
     },
     {
+        accessorKey: "createdAt",
+        header: "Sign Up Time",        
+    },
+    {
         accessorKey: "count",
         header: "Count",
     },

@@ -3,6 +3,13 @@ import { authOptions } from "@/lib/auth"
 import { getServerSession } from "next-auth"
 import { DataTable } from "./data-table"
 import { columns } from "./columns"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+
 
 const page = async () => {
   const session = await getServerSession(authOptions)
@@ -14,8 +21,8 @@ const page = async () => {
       })
 
       if (!usersRes.ok) throw new Error('Retrieved users failed')
-    
-      const {data} = await usersRes.json()
+
+      const { data } = await usersRes.json()
 
       //console.log(data) 
       return data
@@ -30,13 +37,25 @@ const page = async () => {
     }
   }
 
-  const data = await getUsers()
+  const data = JSON.parse(await getUsers())
   console.log(data)
 
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={JSON.parse(data)} />
-    </div>
+    <>
+      <Tabs defaultValue="users" className="w-[1000px]">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="statistics">Statistics</TabsTrigger>
+        </TabsList>
+        <TabsContent value="users">
+          <div className="container mx-auto py-10">
+            <DataTable columns={columns} data={data} />
+          </div>
+        </TabsContent>
+        <TabsContent value="statistics">
+        </TabsContent>
+      </Tabs>
+    </>
   )
 }
 
