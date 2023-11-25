@@ -9,7 +9,15 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { User } from ".prisma/client"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+type UserStatistic = {
+  totalSignedUpUsers: number
+  totalActiveSessionToday: number
+  averageSessionInLast7Days: number
+}
 
 const page = async () => {
   const session = await getServerSession(authOptions)
@@ -23,8 +31,6 @@ const page = async () => {
       if (!usersRes.ok) throw new Error('Retrieved users failed')
 
       const { data } = await usersRes.json()
-
-      //console.log(data) 
       return data
     }
     catch (error: any) {
@@ -37,9 +43,52 @@ const page = async () => {
     }
   }
 
-  const data = JSON.parse(await getUsers())
-  console.log(data)
+  const getlastNdaysActiveUserCount = (data: User[], shift: number) => {
+    const today = new Date()
+    let lastNDay = new Date()
+    if (shift === 0) {
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1;
+      const day = today.getDate();
+      lastNDay = new Date(`${year}/${month}/${day}`)
+    }
+    else {
+      lastNDay = new Date(new Date().setDate(today.getDate() - shift))
+    }
+    const activeUserLastNDays = data.filter((user) => {
+      return (
+        user.lastLogon && new Date(user.lastLogon) >= lastNDay
+        && new Date(user.lastLogon) <= today
+      )
+    })
 
+    return activeUserLastNDays.length
+  }
+
+  const calculateStatistics = (data: User[]) => {
+    let statistics: UserStatistic = {} as UserStatistic
+    statistics.totalSignedUpUsers = data.length
+    statistics.totalActiveSessionToday = getlastNdaysActiveUserCount(data, 0)
+    statistics.averageSessionInLast7Days = getlastNdaysActiveUserCount(data, 7) / 7
+    return statistics
+  }
+
+  const data = JSON.parse(await getUsers())
+  if (data.length === 0) {
+    return (
+      <>
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            Sorry we could not retrieve users data at this moment.
+          </AlertDescription>
+        </Alert>
+      </>
+    )
+  }
+  console.log(data)
+  let statistics = calculateStatistics(data)
+  console.log(statistics)
   return (
     <>
       <Tabs defaultValue="users" className="w-[1000px]">
@@ -53,6 +102,22 @@ const page = async () => {
           </div>
         </TabsContent>
         <TabsContent value="statistics">
+          <Card>
+            <CardHeader>
+              <CardTitle>Active User Statistics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="col-span-1">
+                <div className="text-left">Totals Sign Up Users<div className="text-right">{statistics.totalSignedUpUsers}</div></div>
+              </div>
+              <div className="col-span-1">
+                <div className="text-left">Totals Active Users Today<div className="text-right">{statistics.totalActiveSessionToday}</div></div>
+              </div>
+              <div className="col-span-1">
+                <div className="text-left">Average Active Users In 7 Days<div className="text-right">{statistics.averageSessionInLast7Days}</div></div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </>
