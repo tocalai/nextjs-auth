@@ -1,6 +1,8 @@
 import { toast } from "@/components/ui/use-toast"
 import { authOptions } from "@/lib/auth"
 import { getServerSession } from "next-auth"
+import { DataTable } from "./data-table"
+import { columns } from "./columns"
 
 const page = async () => {
   const session = await getServerSession(authOptions)
@@ -15,7 +17,7 @@ const page = async () => {
     
       const {data} = await usersRes.json()
 
-      console.log(data) 
+      //console.log(data) 
       return data
     }
     catch (error: any) {
@@ -28,8 +30,14 @@ const page = async () => {
     }
   }
 
-  await getUsers()
-  //console.log(data)
+  const data = await getUsers()
+  console.log(data)
+
+  return (
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={JSON.parse(data)} />
+    </div>
+  )
 }
 
 export default page

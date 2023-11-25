@@ -54,7 +54,7 @@ export default function SignInForm() {
       const session = await getSession()
       if (session?.user.isVerified) {
         router.refresh()
-        router.push('/admin')
+        router.push('/admin/user')
       }
       else {
         signOut({

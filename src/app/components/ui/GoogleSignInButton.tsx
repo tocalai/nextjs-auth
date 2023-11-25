@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react"
 import { useState } from "react"
 import SpinnerButton from "./SpinnerButton "
+import { toast } from "@/components/ui/use-toast"
 
 
 const GoogleSignInButton = ({
@@ -14,10 +15,15 @@ const GoogleSignInButton = ({
     const loginWithGoogle =  async () => {
         setIsSubmitting(true)
         try {
-            const signInData = await signIn('google', {callbackUrl: "/admin"})
-            console.log(signInData)
+            const signInData = await signIn('google', {callbackUrl: "/admin/user"})
+            // console.log(signInData)
         }catch (error : any) {
             console.error(error)
+            toast({
+                title: "Google Oauth failed",
+                description: `Something went wrong, ${error.message}.`,
+                variant: 'destructive'
+              })
         } 
         setIsSubmitting(false)
     }
