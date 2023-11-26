@@ -3,7 +3,13 @@ import { db } from "@/lib/db"
 
 export async function GET(req: NextRequest) {
     try {
+        const searchParams = req.nextUrl.searchParams
+        const limit = searchParams?.get("limit") ?? "5"
+        const offset = searchParams?.get("offset") ?? "0"
+
         const allUsers = db.user.findMany({
+            skip: Number(offset),
+            take: Number(limit),
             select: {
                 email: true,
                 username: true,
@@ -11,10 +17,14 @@ export async function GET(req: NextRequest) {
                 count: true,
                 lastLogon: true,
                 createdAt: true
+            },
+            orderBy: {
+                lastLogon: 'desc'
             }
         })
-        // console.log(JSON.stringify((await allUsers).map(u => u)))
-        return NextResponse.json({ data: JSON.stringify((await allUsers).map(u => u) )})
+        const totals = await db.user.count()
+
+        return NextResponse.json({ data: JSON.stringify((await allUsers).map(u => u)), totals: totals})
 
     }
     catch(error : any) {

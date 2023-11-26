@@ -1,3 +1,4 @@
+
 import { toast } from "@/components/ui/use-toast"
 import { authOptions } from "@/lib/auth"
 import { getServerSession } from "next-auth"
@@ -13,25 +14,36 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { User } from ".prisma/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+
 type UserStatistic = {
   totalSignedUpUsers: number
   totalActiveSessionToday: number
   averageSessionInLast7Days: number
 }
 
-const page = async () => {
-  const session = await getServerSession(authOptions)
+interface IndexPageProps {
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+}
+
+const page = async ({ searchParams }: IndexPageProps) => {
+  //const session = await getServerSession(authOptions)
+  const { page, per_page } = searchParams
+  const limit = typeof per_page === "string" ? parseInt(per_page) : 10
+  const offset = typeof page === "string" ? parseInt(page) > 0 ? (parseInt(page) - 1) * limit : 0 : 0
+
 
   const getUsers = async () => {
     try {
-      const usersRes = await fetch(`${process.env.NEXTAUTH_URL}/api/user/admin/read`, {
+      const usersRes = await fetch(`${process.env.NEXTAUTH_URL}/api/user/admin/read?offset=${offset}&limit=${limit}`, {
         method: 'GET'
       })
 
       if (!usersRes.ok) throw new Error('Retrieved users failed')
 
-      const { data } = await usersRes.json()
-      return data
+      const { data, totals } = await usersRes.json()
+      return {data: data, totals: totals}
     }
     catch (error: any) {
       console.error(error.message)
@@ -73,8 +85,14 @@ const page = async () => {
     return statistics
   }
 
-  const data = JSON.parse(await getUsers())
-  if (data.length === 0) {
+  let users: User[] = []
+  let totals: number = 0
+  await getUsers().then(val => {
+    users = JSON.parse(val?.data)
+    totals = val?.totals
+  }) 
+  //const users = JSON.parse(data)
+  if (users.length === 0) {
     return (
       <>
         <Alert variant="destructive">
@@ -86,9 +104,11 @@ const page = async () => {
       </>
     )
   }
-  console.log(data)
-  let statistics = calculateStatistics(data)
+  console.log(users)
+  let statistics = calculateStatistics(users)
   console.log(statistics)
+
+  const pageCount = Math.ceil(totals / limit)
   return (
     <>
       <Tabs defaultValue="users" className="w-[1000px]">
@@ -98,7 +118,7 @@ const page = async () => {
         </TabsList>
         <TabsContent value="users">
           <div className="container mx-auto py-10">
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={users} pageCount={pageCount} />
           </div>
         </TabsContent>
         <TabsContent value="statistics">

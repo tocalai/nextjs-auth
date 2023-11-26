@@ -15,7 +15,7 @@ const GoogleSignInButton = ({
     const loginWithGoogle =  async () => {
         setIsSubmitting(true)
         try {
-            const signInData = await signIn('google', {callbackUrl: "/admin/user"})
+            const signInData = await signIn('google', {callbackUrl: "/admin/user?page=1&per_page=5"})
             // console.log(signInData)
         }catch (error : any) {
             console.error(error)

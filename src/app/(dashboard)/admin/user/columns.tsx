@@ -1,4 +1,4 @@
-"use client"
+// "use client"
 
 import { User } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
