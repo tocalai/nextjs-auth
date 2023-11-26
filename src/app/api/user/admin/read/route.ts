@@ -18,16 +18,18 @@ export async function GET(req: NextRequest) {
                 lastLogon: true,
                 createdAt: true
             },
-            orderBy: {
-                lastLogon: 'desc'
-            }
+            orderBy: [{
+                lastLogon: {
+                    sort: 'desc', nulls: 'last'
+                }
+            }]
         })
         const totals = await db.user.count()
 
-        return NextResponse.json({ data: JSON.stringify((await allUsers).map(u => u)), totals: totals})
+        return NextResponse.json({ data: JSON.stringify((await allUsers).map(u => u)), totals: totals })
 
     }
-    catch(error : any) {
+    catch (error: any) {
         console.error(error.message)
         return NextResponse.json({ message: "Something went wrong." }, { status: 500 })
     }
