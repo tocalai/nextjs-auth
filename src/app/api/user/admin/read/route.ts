@@ -4,7 +4,7 @@ import { db } from "@/lib/db"
 export async function GET(req: NextRequest) {
     try {
         const searchParams = req.nextUrl.searchParams
-        const limit = searchParams?.get("limit") ?? process.env.USER_STATISTICS_TABLE_ROWS_PER_PAGE
+        const limit = searchParams?.get("limit") ?? process.env.NEXT_PUBLIC_USER_STATISTICS_TABLE_ROWS_PER_PAGE
         const offset = searchParams?.get("offset") ?? "0"
 
         const allUsers = db.user.findMany({

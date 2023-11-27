@@ -13,7 +13,8 @@ import { useToast } from '@/components/ui/use-toast'
 import { useEffect, useState } from 'react'
 import SpinnerButton from '../ui/SpinnerButton '
 import { ToastAction } from '@/components/ui/toast';
-import { EmailType } from '@/types/user';
+import { EmailType } from '@/types/enums';
+
 
 
 
@@ -54,7 +55,8 @@ export default function SignInForm() {
       const session = await getSession()
       if (session?.user.isVerified) {
         router.refresh()
-        router.push(`/admin/user?page=1&per_page=${process.env.USER_STATISTICS_TABLE_ROWS_PER_PAGE}`)
+ 
+        router.push(`/admin/user?page=1&per_page=${process.env.NEXT_PUBLIC_USER_STATISTICS_TABLE_ROWS_PER_PAGE}`)
       }
       else {
         signOut({

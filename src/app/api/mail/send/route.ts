@@ -5,9 +5,9 @@ import { Resend } from 'resend';
 import * as bcrypt from 'bcrypt'
 import { db } from "@/lib/db"
 import ResetPasswordTemplate from '@/app/components/mail/ResetPasswordTemplate';
-import { EmailType } from '@/types/user';
 import { isNullOrUndefined } from '@/lib/utils';
 import { constants } from 'fs/promises';
+import { EmailType } from '@/types/enums';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

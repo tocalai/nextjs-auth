@@ -28,7 +28,6 @@ const page = async ({ searchParams }: IndexPageProps) => {
   const limit = typeof per_page === "string" ? parseInt(per_page) : 10
   const offset = typeof page === "string" ? parseInt(page) > 0 ? (parseInt(page) - 1) * limit : 0 : 0
 
-
   const getUsers = async () => {
     try {
       const usersRes = await fetch(`${process.env.NEXTAUTH_URL}/api/user/admin/read?offset=${offset}&limit=${limit}`, {
@@ -74,6 +73,7 @@ const page = async ({ searchParams }: IndexPageProps) => {
   let users: User[] = []
   let totals: number = 0
   await getUsers().then(val => {
+    console.log(val)
     users = JSON.parse(val?.data)
     totals = val?.totals
   })
@@ -113,11 +113,11 @@ const page = async ({ searchParams }: IndexPageProps) => {
             <CardContent>
               {Object.keys(statistics).length > 0 && (
                 <>
-                  <div className="col-span-1">
-                    <div className="text-left">Totals Sign Up Users<div className="text-right">{statistics.totalSignedUpUsers}</div></div>
-                  </div><div className="col-span-1">
+                  <div className="col-span-12">
+                    <div className="text-left col-span-6">Totals Sign Up Users<div className="text-right col-span-6">{statistics.totalSignedUpUsers}</div></div>
+                  </div><div className="col-span-6">
                     <div className="text-left">Totals Active Users Today<div className="text-right">{statistics.totalActiveSessionToday}</div></div>
-                  </div><div className="col-span-1">
+                  </div><div className="col-span-6">
                     <div className="text-left">Average Active Users In 7 Days<div className="text-right">{statistics.averageSessionInLast7Days}</div></div>
                   </div>
                 </>
