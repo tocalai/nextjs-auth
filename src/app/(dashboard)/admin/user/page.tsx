@@ -13,13 +13,8 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { User } from ".prisma/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { UserStatistic } from "@/types/user"
 
-
-type UserStatistic = {
-  totalSignedUpUsers: number
-  totalActiveSessionToday: number
-  averageSessionInLast7Days: number
-}
 
 interface IndexPageProps {
   searchParams: {
@@ -28,7 +23,7 @@ interface IndexPageProps {
 }
 
 const page = async ({ searchParams }: IndexPageProps) => {
-  //const session = await getServerSession(authOptions)
+
   const { page, per_page } = searchParams
   const limit = typeof per_page === "string" ? parseInt(per_page) : 10
   const offset = typeof page === "string" ? parseInt(page) > 0 ? (parseInt(page) - 1) * limit : 0 : 0
@@ -43,7 +38,27 @@ const page = async ({ searchParams }: IndexPageProps) => {
       if (!usersRes.ok) throw new Error('Retrieved users failed')
 
       const { data, totals } = await usersRes.json()
-      return {data: data, totals: totals}
+      return { data: data, totals: totals }
+    }
+    catch (error: any) {
+      console.error(error.message)
+      toast({
+        title: "Get user info failed",
+        description: `Something went wrong, ${error.message}.`,
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const getStatistics = async (shift: number) => {
+    let statistics: UserStatistic = {} as UserStatistic
+    try {
+      const statisticsRes = await fetch(`${process.env.NEXTAUTH_URL}/api/user/admin/statistics?shift=${shift}`, {
+        method: 'GET'
+      })
+
+      if (!statisticsRes.ok) throw new Error('Retrieved users statistics failed')
+      statistics = await statisticsRes.json()
     }
     catch (error: any) {
       console.error(error.message)
@@ -53,35 +68,6 @@ const page = async ({ searchParams }: IndexPageProps) => {
         variant: 'destructive'
       })
     }
-  }
-
-  const getlastNdaysActiveUserCount = (data: User[], shift: number) => {
-    const today = new Date()
-    let lastNDay = new Date()
-    if (shift === 0) {
-      const year = today.getFullYear();
-      const month = today.getMonth() + 1;
-      const day = today.getDate();
-      lastNDay = new Date(`${year}/${month}/${day}`)
-    }
-    else {
-      lastNDay = new Date(new Date().setDate(today.getDate() - shift))
-    }
-    const activeUserLastNDays = data.filter((user) => {
-      return (
-        user.lastLogon && new Date(user.lastLogon) >= lastNDay
-        && new Date(user.lastLogon) <= today
-      )
-    })
-
-    return activeUserLastNDays.length
-  }
-
-  const calculateStatistics = (data: User[]) => {
-    let statistics: UserStatistic = {} as UserStatistic
-    statistics.totalSignedUpUsers = data.length
-    statistics.totalActiveSessionToday = getlastNdaysActiveUserCount(data, 0)
-    statistics.averageSessionInLast7Days = getlastNdaysActiveUserCount(data, 7) / 7
     return statistics
   }
 
@@ -90,22 +76,10 @@ const page = async ({ searchParams }: IndexPageProps) => {
   await getUsers().then(val => {
     users = JSON.parse(val?.data)
     totals = val?.totals
-  }) 
-  //const users = JSON.parse(data)
-  if (users.length === 0) {
-    return (
-      <>
-        <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            Sorry we could not retrieve users data at this moment.
-          </AlertDescription>
-        </Alert>
-      </>
-    )
-  }
-  console.log(users)
-  let statistics = calculateStatistics(users)
+  })
+
+  const statistics = await getStatistics(7) as UserStatistic
+
   console.log(statistics)
 
   const pageCount = Math.ceil(totals / limit)
@@ -117,9 +91,19 @@ const page = async ({ searchParams }: IndexPageProps) => {
           <TabsTrigger value="statistics">Statistics</TabsTrigger>
         </TabsList>
         <TabsContent value="users">
-          <div className="container mx-auto py-10">
-            <DataTable columns={columns} data={users} pageCount={pageCount} />
-          </div>
+          {users.length > 0 && (
+            <div className="container mx-auto py-10">
+              <DataTable columns={columns} data={users} pageCount={pageCount} />
+            </div>
+          )}
+          {users.length === 0 && (
+            <Alert variant="destructive">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                Sorry we could not retrieve users data at this moment.
+              </AlertDescription>
+            </Alert>
+          )}
         </TabsContent>
         <TabsContent value="statistics">
           <Card>
@@ -127,15 +111,27 @@ const page = async ({ searchParams }: IndexPageProps) => {
               <CardTitle>Active User Statistics</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="col-span-1">
-                <div className="text-left">Totals Sign Up Users<div className="text-right">{statistics.totalSignedUpUsers}</div></div>
-              </div>
-              <div className="col-span-1">
-                <div className="text-left">Totals Active Users Today<div className="text-right">{statistics.totalActiveSessionToday}</div></div>
-              </div>
-              <div className="col-span-1">
-                <div className="text-left">Average Active Users In 7 Days<div className="text-right">{statistics.averageSessionInLast7Days}</div></div>
-              </div>
+              {Object.keys(statistics).length > 0 && (
+                <>
+                  <div className="col-span-1">
+                    <div className="text-left">Totals Sign Up Users<div className="text-right">{statistics.totalSignedUpUsers}</div></div>
+                  </div><div className="col-span-1">
+                    <div className="text-left">Totals Active Users Today<div className="text-right">{statistics.totalActiveSessionToday}</div></div>
+                  </div><div className="col-span-1">
+                    <div className="text-left">Average Active Users In 7 Days<div className="text-right">{statistics.averageSessionInLast7Days}</div></div>
+                  </div>
+                </>
+              )}
+              {Object.keys(statistics).length === 0 && (
+                <>
+                  <Alert variant="destructive">
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                      Sorry we could not retrieve users statistics at this moment.
+                    </AlertDescription>
+                  </Alert>
+                </>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

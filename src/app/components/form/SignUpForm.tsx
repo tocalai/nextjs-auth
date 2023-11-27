@@ -12,7 +12,7 @@ import { useToast } from '@/components/ui/use-toast'
 import SpinnerButton from '../ui/SpinnerButton '
 import { useState } from 'react'
 import { validatePassword } from '@/lib/utils'
-import { EmailType } from '@/types/enums'
+import { EmailType } from '@/types/user'
 import PasswordCriteriaCard from '../ui/PasswordCriteriaCard'
 
 
