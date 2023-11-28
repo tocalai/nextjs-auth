@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { toast } from '@/components/ui/use-toast'
+import refreshSession from '@/lib/utils'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState, useTransition } from 'react'
 
@@ -15,7 +16,7 @@ const ProfileSheet = () => {
     username: '',
     email: ''
   })
-  const { data: session } = useSession()
+  const { data: session, update } = useSession()
 
   const updateUser = async () => {
     try {
@@ -40,6 +41,15 @@ const ProfileSheet = () => {
 
       const { message } = await userRes.json()
       if (!userRes.ok) throw new Error(message)
+
+      // update session as well
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          username: form.username
+        },
+      }).then(() => refreshSession())
 
       toast({
         title: message
@@ -71,7 +81,7 @@ const ProfileSheet = () => {
       email: session?.user.email || ''
     }))
 
-  }, [session]);
+  }, [session?.user.id]);
 
 
   return (

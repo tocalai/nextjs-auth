@@ -9,7 +9,7 @@ import { decode, encode } from "next-auth/jwt"
 
 const customAdapter = PrismaAdapter(db);
 
-customAdapter.createUser = (data: any) :any => {
+customAdapter.createUser = (data: any): any => {
     return db.user.create({
         data: {
             ...data,
@@ -120,7 +120,12 @@ export const authOptions: NextAuthOptions = {
         // async redirect({ url, baseUrl }) {
         //     return baseUrl
         // },
-        async jwt({ token, user, profile }) {
+        async jwt({ token, user, trigger, session }) {
+            
+            if (session && trigger === 'update') {
+                return { ...token, ...session.user };
+            }
+
             if (user) {
                 return {
                     ...token,
@@ -142,8 +147,6 @@ export const authOptions: NextAuthOptions = {
                     isVerified: token.isVerified
                 }
             }
-
-
         }
     },
     debug: process.env.NODE_ENV === 'development'

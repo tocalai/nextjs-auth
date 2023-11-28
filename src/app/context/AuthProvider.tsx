@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return (
         <>
-            <SessionProvider>{children}</SessionProvider>
+            <SessionProvider refetchInterval={5}>{children}</SessionProvider>
         </>
     )
 }

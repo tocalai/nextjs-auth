@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
- 
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -31,4 +31,9 @@ export function validatePassword(password: string): boolean {
 
 export function isNullOrUndefined(value: any) {
   return value === undefined || value === null;
+}
+
+export default function refreshSession() {
+  const event = new Event('visibilitychange')
+  document.dispatchEvent(event)
 }
