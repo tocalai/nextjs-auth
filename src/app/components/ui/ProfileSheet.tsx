@@ -49,7 +49,7 @@ const ProfileSheet = () => {
           ...session?.user,
           username: form.username
         },
-      }).then(() => refreshSession())
+      })
 
       toast({
         title: message
