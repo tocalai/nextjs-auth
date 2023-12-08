@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a application that built under [Next.js](https://nextjs.org/).
+Below is a comprehensive guide to help you get started, understand the features and functions, and utilize the available APIs.
 
 ## Getting Started
 
-First, run the development server:
+To launch the development server, use the following command after restoring all required packages:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Visit http://localhost:3000 in your browser to view the landing page. 
+Make sure to update the settings in the .env file with your own configurations.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features and Functions Demonstration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The application boasts the following features:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- User Authentication:
+  - [X] Creditail accounts login or OAuth login with Google.
+  - [X] User registration.
+  - [X] Email verification for creditail accounts.
 
-## Learn More
+- Authorization and Security:
+  - [X] Authentication and authorization for the administrator page.
+  - [X] Basic HTML form data validation.
+  - [X] Password and profile editing capabilities.
 
-To learn more about Next.js, take a look at the following resources:
+- User Dashboard:
+  - [X] User statistics and a dashboard with paging.
+  - [X] Seamless integration with the database.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## API Documentation
+- api/mail/send: API for sending emails.
+- api/mail/verify: Verify if a user account is valid or not.
+- api/user/sign-up: API for user account registration.
+- api/user/admin/read: Read user profile data.
+- api/user/admin/reset-password: API for resetting passwords.
+- api/user/admin/update: API for updating user profiles.
+- api/user/admin/statistics:  API for retrieving user statistics information.
