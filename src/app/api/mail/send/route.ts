@@ -6,11 +6,46 @@ import * as bcrypt from 'bcrypt'
 import { db } from "@/lib/db"
 import ResetPasswordTemplate from '@/app/components/mail/ResetPasswordTemplate';
 import { isNullOrUndefined } from '@/lib/utils';
-import { constants } from 'fs/promises';
+
 import { EmailType } from '@/types/enums';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+/**
+ * @swagger
+ * /api/mail/send:
+ *   post:
+ *     tags:
+ *       - Mail
+ *     summary: Sending mail for new account registration process
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               type:
+ *                 type: number
+ *                 enum:
+ *                   - EmailValidation
+ *                   - ResetPassword
+ *     responses:
+ *       '500':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()

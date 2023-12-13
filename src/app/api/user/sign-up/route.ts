@@ -10,6 +10,40 @@ const userSchema = z.object({
     password: z.string().min(1, 'Password is required.'),
 })
 
+/**
+ * @swagger
+ * /api/user/sign-up:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: Sign-up with user data
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       '500':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()
@@ -20,7 +54,7 @@ export async function POST(req: NextRequest) {
         })
 
         if (userByEmail) {
-            return NextResponse.json({ user: null, message: 'Email with the user already existed.' }, { status: 409 })
+            return NextResponse.json({ user: null, message: 'Email with the user already existed.' }, { status: 500 })
         }
 
         // store user info into db       

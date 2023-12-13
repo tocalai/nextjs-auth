@@ -2,7 +2,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from "@/lib/db"
 
-
+/**
+ * @swagger
+ * /api/mail/verify:
+ *   post:
+ *     tags:
+ *       - Mail
+ *     summary: Verify user mail content accroding token
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *     responses:
+ *       '500':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()

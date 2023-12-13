@@ -6,12 +6,15 @@ import { signOut } from "next-auth/react"
 import ResetPasswordDialog from "./ResetPasswordDialog"
 import { Separator } from "@/components/ui/separator"
 import ProfileSheet from "./ProfileSheet"
+import Link from 'next/link'
 
 const UserAccountNav = () => {
   return (
     <>
       <ProfileSheet />
       <ResetPasswordDialog/>
+      <Separator orientation="vertical"/>
+      <Link href='/admin/api-doc'>Swagger Doc</Link>
       <Separator orientation="vertical"/>
       <Button onClick={() => signOut({
         redirect: true,

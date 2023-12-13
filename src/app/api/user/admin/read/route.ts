@@ -1,6 +1,37 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 
+/**
+ * @swagger
+ * /api/user/admin/read:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Read user information
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+*       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '500':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 export async function GET(req: NextRequest) {
     try {
         const searchParams = req.nextUrl.searchParams
