@@ -38,6 +38,6 @@ The application boasts the following features:
 - api/user/admin/update: API for updating user profiles.
 - api/user/admin/statistics:  API for retrieving user statistics information.
 
-> Please login to grant the perssiom to see the swagger page.
+> Please login to grant the permission to see the swagger page.
 
 ![Swagger](https://raw.githubusercontent.com/tocalai/nextjs-aut/main/.github/swagger.png)
