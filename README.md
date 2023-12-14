@@ -29,7 +29,7 @@ The application boasts the following features:
   - [X] User statistics and a dashboard with paging.
   - [X] Seamless integration with the database.
 
-## API Documentation
+## API Documentation (Swagger Doc: /admin/api-doc)
 - api/mail/send: API for sending emails.
 - api/mail/verify: Verify if a user account is valid or not.
 - api/user/sign-up: API for user account registration.
@@ -37,3 +37,7 @@ The application boasts the following features:
 - api/user/admin/reset-password: API for resetting passwords.
 - api/user/admin/update: API for updating user profiles.
 - api/user/admin/statistics:  API for retrieving user statistics information.
+
+> Please login to grant the perssiom to see the swagger page.
+
+![Swagger](https://raw.githubusercontent.com/tocalai/nextjs-aut/main/.github/swagger.png)

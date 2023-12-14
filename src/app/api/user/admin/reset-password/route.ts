@@ -2,6 +2,40 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from "@/lib/db"
 import * as bcrypt from "bcrypt"
 
+/**
+ * @swagger
+ * /api/user/admin/reset-password:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: Reset user password
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       '500':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()

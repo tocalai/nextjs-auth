@@ -24,7 +24,7 @@ import { db } from "@/lib/db"
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
  *       '200':
  *         content:

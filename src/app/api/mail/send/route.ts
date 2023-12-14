@@ -38,7 +38,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
  *       '200':
  *         content:

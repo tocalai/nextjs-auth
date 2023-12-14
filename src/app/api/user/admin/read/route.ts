@@ -24,13 +24,34 @@ import { db } from "@/lib/db"
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
  *       '200':
  *         content:
  *           application/json:
  *             schema:
- *               type: object
+ *                $ref: '#/components/schemas/User'
+ * 
+ * components:
+ *   schemas:
+ *     User:
+ *      type: object
+ *      properties:
+ *        email:
+ *          type: string
+ *        username:
+ *          type: string
+ *        isVerified:
+ *          type: boolean
+ *        count:
+ *          type: integer
+ *        lastLogon:
+ *          type: string
+ *          format: date-time
+ *        createAt:
+ *          type: string
+ *          format: date-time
+ * 
  */
 export async function GET(req: NextRequest) {
     try {

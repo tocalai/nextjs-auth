@@ -36,7 +36,7 @@ const userSchema = z.object({
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
  *       '200':
  *         content:

@@ -2,7 +2,45 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { UserStatistic } from "@/types/user"
 
-
+/**
+ * @swagger
+ * /api/user/admin/statistics:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Read user statistics
+ *     parameters:
+ *       - in: query
+ *         name: shift
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '500':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserStatistic'
+ * 
+ * components:
+ *     schemas:
+ *       UserStatistic:
+ *         type: object
+ *         properties:
+ *           totalSignedUpUsers:
+ *               type: integer          
+ *           totalActiveSessionToday:
+ *               type: integer
+ *           averageSessionInLast7Days:
+ *               type: number
+ */
 export async function GET(req: NextRequest) {
     try {
         
