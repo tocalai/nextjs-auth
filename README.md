@@ -40,4 +40,4 @@ The application boasts the following features:
 
 > Please login to grant the permission to see the swagger page.
 
-![Swagger](https://raw.githubusercontent.com/tocalai/nextjs-auth/main/.github/swagger.png)
+![Swagger](https://github.com/tocalai/nextjs-auth/blob/main/.github/swagger.png)
