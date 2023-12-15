@@ -81,7 +81,7 @@ const ProfileSheet = () => {
       email: session?.user.email || ''
     }))
 
-  }, [session?.user.id]);
+  }, [session]);
 
 
   return (
