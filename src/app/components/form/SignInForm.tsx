@@ -107,11 +107,12 @@ export default function SignInForm() {
   }
 
   useEffect(() => {
-    var userUrl = window.location.search.split("=")[1];
-    if (userUrl && userUrl.indexOf('error') > 0) {
+    var queryKey = window.location.search.split("=")[0]
+    if (queryKey && !queryKey.includes('user')) {
       return
     }
 
+    var userUrl = window.location.search.split("=")[1]
     if (!userUrl) {
       setVerified(true);
     }
