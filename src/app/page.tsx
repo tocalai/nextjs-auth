@@ -2,6 +2,8 @@ import { authOptions } from '@/lib/auth'
 import { Hand } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 
+export const dynamic = 'auto'
+
 export default async function Home() {
   const session = await getServerSession(authOptions)
   console.log(session)
