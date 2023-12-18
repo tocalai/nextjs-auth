@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { UserStatistic } from "@/types/user"
 
+export const dynamic = 'force-dynamic'
 /**
  * @swagger
  * /api/user/admin/statistics:

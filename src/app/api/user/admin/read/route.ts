@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 
+export const dynamic = 'force-dynamic'
 /**
  * @swagger
  * /api/user/admin/read:
@@ -53,6 +54,7 @@ import { db } from "@/lib/db"
  *          format: date-time
  * 
  */
+
 export async function GET(req: NextRequest) {
     try {
         const searchParams = req.nextUrl.searchParams
