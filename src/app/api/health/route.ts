@@ -3,8 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 /**
  * @swagger
- * /api/health:
- *   get:
+ * paths:
+ *  /api/health:
+ *    get:
  *     tags:
  *       - Health Check
  *     summary: Get the current API service health status
