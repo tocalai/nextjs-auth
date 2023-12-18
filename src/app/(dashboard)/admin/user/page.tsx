@@ -15,7 +15,7 @@ import { User } from ".prisma/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserStatistic } from "@/types/user"
 
-// export const revalidate = 0 // no cache
+export const revalidate = 0 // no cache
 
 
 interface IndexPageProps {
