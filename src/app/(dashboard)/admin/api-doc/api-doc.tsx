@@ -7,10 +7,18 @@ import SwaggerUI from 'swagger-ui-react';
 
 type Props = {
   spec: Record<string, any>,
-};
-
-function ReactSwagger({ spec }: Props) {
-  return <SwaggerUI spec={spec} />;
+  url: string | undefined
 }
+
+function ReactSwagger({ spec, url }: Props) {
+  if (process.env.NODE_ENV === 'development') {
+    return <SwaggerUI spec={spec} />
+  }
+  
+  else {
+    return <SwaggerUI url={url} />
+  }
+}
+ 
 
 export default ReactSwagger;

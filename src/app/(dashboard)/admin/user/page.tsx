@@ -24,7 +24,7 @@ interface IndexPageProps {
   }
 }
 
-const page = async ({ searchParams }: IndexPageProps) => {
+const Page = async ({ searchParams }: IndexPageProps) => {
 
   const { page, per_page } = searchParams
   const limit = typeof per_page === "string" ? parseInt(per_page) : 10
@@ -142,4 +142,4 @@ const page = async ({ searchParams }: IndexPageProps) => {
   )
 }
 
-export default page
+export default Page
