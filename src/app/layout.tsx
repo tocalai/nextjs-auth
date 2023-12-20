@@ -30,7 +30,7 @@ export default async function RootLayout({
       {/* <body className={inter.className}> */}
       <body>
         <AuthProvider session={session}>
-          <main className='h-screen flex flex-col justify-center items-center'>
+          <main className='h-screen relative flex-col justify-center items-center'>
             <Navbar />
             {children}
           </main>

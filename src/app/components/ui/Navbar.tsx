@@ -11,7 +11,7 @@ export default async function Navbar() {
 
   return (
     <>
-      <div className="py-2 border-b fixed w-full top-1">
+      <div className="py-2 border-b relative w-full top-0">
         <div className="container flex items-center justify-between">
           <div className="flex items-start">
             <Link href="/" ><PlaneTakeoff width={35} height={35} /></Link>
