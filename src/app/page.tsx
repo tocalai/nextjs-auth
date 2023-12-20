@@ -7,12 +7,12 @@ export default async function Home() {
   console.log(session)
   if (session?.user) {
     return (
-      <div className="text-lime-500 text-5xl"><Hand className=''/> Hello {session?.user.username}, Welcome To Landing Page</div>
+      <div className="container items-center justify-between text-lime-500 text-5xl pt-6"><Hand className=''/> Hello {session?.user.username}, Welcome To Landing Page!</div>
     )
   }
   else {
     return (
-      <h2 className="text-5xl"><Hand/> Hello anonymous, Welcome To Landing Page</h2>
+      <h2 className="container items-center justify-between text-5xl pt-6"><Hand/> Hello anonymous, Welcome To Landing Page!</h2>
     )
   }
 }

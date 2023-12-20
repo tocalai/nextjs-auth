@@ -87,7 +87,7 @@ const Page = async ({ searchParams }: IndexPageProps) => {
   const pageCount = Math.ceil(totals / limit)
   return (
     <>
-      <Tabs defaultValue="users" className="w-[1000px]">
+      <Tabs defaultValue="users" className="container items-center justify-between pt-6">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="statistics">Statistics</TabsTrigger>
