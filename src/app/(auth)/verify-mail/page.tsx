@@ -49,6 +49,7 @@ const Page = () => {
 
   const sendMail = async () => {
     try {
+      console.log('userId:', userId)
       const mailRes = await fetch('/api/mail/send', {
         method: 'POST',
         headers: {
@@ -78,9 +79,12 @@ const Page = () => {
   }
 
   useEffect(() => {
-    const urlUserId = window.location.search.split("=")[1];
+    let searchParams = new URLSearchParams(window.location.search);
+    const urlUserId = searchParams.get('id')
+    // console.log('urlUserId', searchParams.get('id'))
     setUserId(urlUserId || "")
-    const urlToken = window.location.search.split("=")[2];
+    const urlToken = searchParams.get('token')
+    // console.log('urlToken', searchParams.get('token'))
     setToken(urlToken || "");
   }, []);
 
@@ -94,7 +98,7 @@ const Page = () => {
   }, [token]);
 
   return (
-    <Card className="w-[750px]">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle className="text-center">Verifying Email...</CardTitle>
 
@@ -106,7 +110,7 @@ const Page = () => {
         <Label>Result</Label>
         {verified ? (<h2 className="p-2 bg-green-950 text-slate-300">Passed</h2>) :
           (
-            <h2 className="p-2 bg-red-950 text-slate-300">Failed, error: `${error}`</h2>
+            <h2 className="p-2 bg-red-950 text-slate-300">Failed, error: {error}</h2>
           )}
       </CardContent>
       <CardFooter className="flex justify-center">
